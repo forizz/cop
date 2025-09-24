@@ -1,5 +1,7 @@
 import type { Route } from "./+types/home";
-import { Link } from "react-router";
+import Header from "~/components/header";
+import type { Category } from "~/types";
+import CategoryGrid from "~/components/CategoryGrid";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -8,7 +10,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-const categories = [
+const categories: Category[] = [
   {
     title: "Geography",
     link: "#/geography",
@@ -25,30 +27,15 @@ const categories = [
 
 export default function Home() {
   return (
-    <>
-      <header>
-        <Link to="/">IPZ Quiz</Link>
-        <form>
-          <input
-            type="search"
-            placeholder="Search"
-          />
-        </form>
-      </header>
-      <main>
+    <div className="flex min-h-screen flex-col">
+      <Header />
+      <main className="flex-1 p-8">
         <h1>Quiz Categories</h1>
-        <div className="grid">
-          {categories.map((category) => (
-            <Link
-              to={category.link}
-              key={category.link}
-            >
-              <h2>{category.title}</h2>
-            </Link>
-          ))}
-        </div>
+        <CategoryGrid categories={categories} />
       </main>
-      <footer></footer>
-    </>
+      <footer className="flex items-center justify-center p-4">
+        <p>Made by Danylkovych Dmytro</p>
+      </footer>
+    </div>
   );
 }
