@@ -1,7 +1,8 @@
 import type { Route } from "./+types/home";
-import Header from "~/components/header";
+import Header from "~/components/Header";
 import type { Category } from "~/types";
 import CategoryGrid from "~/components/CategoryGrid";
+import Footer from "~/components/Footer";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -33,9 +34,7 @@ export default function Home() {
         <h1>Quiz Categories</h1>
         <CategoryGrid categories={categories} />
       </main>
-      <footer className="flex items-center justify-center p-4">
-        <p>Made by Danylkovych Dmytro</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
