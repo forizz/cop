@@ -1,8 +1,9 @@
 import type { Route } from "./+types/home";
-import Header from "~/components/Header";
-import type { Category } from "~/types";
 import CategoryGrid from "~/components/CategoryGrid";
-import Footer from "~/components/Footer";
+import AppLayout from "~/components/AppLayout";
+import { categories, quizList } from "~/data";
+import { Link } from "react-router";
+import PopularQuiz from "~/components/PopularQuiz";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -11,30 +12,17 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-const categories: Category[] = [
-  {
-    title: "Geography",
-    link: "#/geography",
-  },
-  {
-    title: "History",
-    link: "#/history",
-  },
-  {
-    title: "Sport",
-    link: "#/sport",
-  },
-];
-
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <main className="flex-1 p-8">
+    <AppLayout>
+      <main className="flex flex-1 flex-col gap-2 p-8">
         <h1>Quiz Categories</h1>
-        <CategoryGrid categories={categories} />
+
+        <div className="flex flex-1 gap-8 px-24">
+          <CategoryGrid categories={categories} />
+          <PopularQuiz />
+        </div>
       </main>
-      <Footer />
-    </div>
+    </AppLayout>
   );
 }

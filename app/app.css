@@ -7,12 +7,13 @@
 
 :root {
     --foreground: oklch(5% 0 0);
-    --background: oklch(95% 0 0)
+    --background: oklch(95% 0 0);
 }
 
 @theme inline {
     --color-foreground: var(--foreground);
     --color-background: var(--background);
+    --color-primary: var(--color-emerald-700);
 }
 
 html,
