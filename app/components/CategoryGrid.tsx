@@ -8,9 +8,12 @@ export default function CategoryGrid({
   categories: Category[];
 }) {
   return (
-    <div className="grid">
+    <div className="grid grid-cols-2 gap-4">
       {categories.map((category) => (
-        <CategoryCard category={category} />
+        <CategoryCard
+          key={category.link}
+          category={category}
+        />
       ))}
     </div>
   );
