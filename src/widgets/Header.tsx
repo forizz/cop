@@ -9,7 +9,7 @@ function Header() {
         <img
           src="public/QuizLogo.png"
           alt="logo"
-          className="h-32 w-32"
+          className="h-12"
         />
       </Link>
 

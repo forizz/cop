@@ -12,7 +12,7 @@ function CategoryCard({ category }: { category: Category }) {
       <img
         src={category.image.href}
         alt={category.image.alt}
-        className="w-full"
+        className="my-auto w-full"
       />
       <h2 className="bg-primary text-background flex w-full justify-center rounded-b-xl py-4">
         {category.title}
