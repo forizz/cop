@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router";
-import type { Category } from "~/types";
+import type { Category } from "~/shared/types";
 
-export default function CategoryCard({ category }: { category: Category }) {
+function CategoryCard({ category }: { category: Category }) {
   return (
     <Link
       to={category.link}
@@ -20,3 +20,5 @@ export default function CategoryCard({ category }: { category: Category }) {
     </Link>
   );
 }
+
+export { CategoryCard };

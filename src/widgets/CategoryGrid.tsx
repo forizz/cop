@@ -1,12 +1,8 @@
 import React from "react";
-import type { Category } from "~/types";
-import CategoryCard from "~/components/CategoryCard";
+import type { Category } from "~/shared/types";
+import { CategoryCard } from "~/widgets";
 
-export default function CategoryGrid({
-  categories,
-}: {
-  categories: Category[];
-}) {
+function CategoryGrid({ categories }: { categories: Category[] }) {
   return (
     <div className="grid grid-cols-2 gap-4">
       {categories.map((category) => (
@@ -18,3 +14,5 @@ export default function CategoryGrid({
     </div>
   );
 }
+
+export { CategoryGrid };

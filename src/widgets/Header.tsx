@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router";
 import { Search } from "lucide-react";
 
-export default function Header() {
+function Header() {
   return (
     <header className="flex items-center justify-between p-4 shadow">
       <Link to="/">
@@ -33,3 +33,5 @@ export default function Header() {
     </header>
   );
 }
+
+export { Header };

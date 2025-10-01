@@ -1,8 +1,8 @@
 import React from "react";
-import { quizList } from "~/data";
+import { quizList } from "~/shared/data";
 import { Link } from "react-router";
 
-export default function PopularQuiz() {
+function PopularQuiz() {
   return (
     <div className="border-primary flex w-full flex-col rounded-2xl border border-2 text-center">
       <h2 className="bg-primary text-background rounded-t-xl p-4 text-xl font-semibold">
@@ -23,3 +23,5 @@ export default function PopularQuiz() {
     </div>
   );
 }
+
+export { PopularQuiz };
