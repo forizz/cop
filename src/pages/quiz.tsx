@@ -1,27 +1,37 @@
 import React from "react";
 import { AppLayout } from "~/widgets";
-import { Link } from "react-router";
+import { Link, useParams } from "react-router";
 import { Check, ChevronRight } from "lucide-react";
 import { quizes } from "~/shared/data";
 
-const currentQuiz = quizes[1];
-
-const breadcrumbs = [
-  {
-    link: "#/",
-    label: "Home",
-  },
-  {
-    link: "#/1",
-    label: "Quiz list",
-  },
-  {
-    link: "#/2",
-    label: currentQuiz.title,
-  },
-];
-
 export default function QuizPage() {
+  const { id } = useParams();
+
+  if (!id) {
+    return <div>Quiz ID not provided</div>;
+  }
+
+  const currentQuiz = quizes.find((quiz) => quiz.id === parseInt(id));
+
+  if (!currentQuiz) {
+    return <div>Quiz not found</div>;
+  }
+
+  const breadcrumbs = [
+    {
+      link: "/",
+      label: "Home",
+    },
+    {
+      link: "/categories",
+      label: "Categories",
+    },
+    {
+      link: `/quiz/${id}`,
+      label: currentQuiz.title,
+    },
+  ];
+
   return (
     <AppLayout>
       <div>

@@ -7,7 +7,7 @@ function Header() {
     <header className="flex items-center justify-between p-4 shadow">
       <Link to="/">
         <img
-          src="public/QuizLogo.png"
+          src="/public/QuizLogo.png"
           alt="logo"
           className="h-12"
         />
