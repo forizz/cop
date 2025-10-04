@@ -1,4 +1,4 @@
-import type { Category, Quiz } from "~/shared/types";
+import type { Category, Quiz } from "~/entities";
 
 export const categories: Category[] = [
   {
