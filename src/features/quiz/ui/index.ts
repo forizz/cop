@@ -1,2 +1,2 @@
 export { PopularQuiz } from "./PopularQuiz";
-export { default as AnswersList } from "./AnswersList";
+export { AnswersList } from "./AnswersList";
