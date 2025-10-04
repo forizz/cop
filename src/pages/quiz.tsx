@@ -5,13 +5,7 @@ import { Check, ChevronRight } from "lucide-react";
 import { quizes } from "~/shared/data";
 
 export default function QuizPage() {
-  const { id } = useParams();
-
-  if (!id) {
-    return <div>Quiz ID not provided</div>;
-  }
-
-  const currentQuiz = quizes.find((quiz) => quiz.id === parseInt(id));
+  const currentQuiz = quizes[0];
 
   if (!currentQuiz) {
     return <div>Quiz not found</div>;
@@ -27,7 +21,7 @@ export default function QuizPage() {
       label: "Categories",
     },
     {
-      link: `/quiz/${id}`,
+      link: `/quiz/${currentQuiz.id}`,
       label: currentQuiz.title,
     },
   ];
