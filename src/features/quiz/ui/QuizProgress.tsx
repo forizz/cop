@@ -23,7 +23,7 @@ function QuizProgress({ questions }: Readonly<QuizProgressProps>) {
   }
 
   return (
-    <section className="bg-accent-background h-fit space-y-2 rounded-md shadow-md">
+    <section className="bg-accent-background flex h-fit flex-col space-y-2 rounded-md shadow-md">
       <button
         type="button"
         className="inline-flex items-center justify-between gap-8 border-b border-zinc-400 p-2"
