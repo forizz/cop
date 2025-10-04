@@ -1,10 +1,12 @@
 import React from "react";
-import { AppLayout, Breadcrumbs } from "~/widgets";
+import { AppLayout, Breadcrumbs, ProgressTimer } from "~/widgets";
 import { quizes } from "~/shared/data";
 import { AnswersList, QuizProgress } from "~/features/quiz/ui";
 
 const currentQuiz = quizes[0];
 const currentQuestion = currentQuiz.questions[0];
+const TOTAL_TIME = 10;
+const CIRCUMFERENCE = 2 * Math.PI * 60;
 
 export default function QuizPage() {
   return (
@@ -30,7 +32,16 @@ export default function QuizPage() {
             Next Question
           </button>
         </div>
-        <QuizProgress questions={currentQuiz.questions} />
+        <div className="flex flex-col gap-6">
+          <ProgressTimer
+            circumference={CIRCUMFERENCE}
+            totalTime={TOTAL_TIME}
+            onComplete={() => {
+              alert("Time Ended");
+            }}
+          />
+          <QuizProgress questions={currentQuiz.questions} />
+        </div>
       </main>
     </AppLayout>
   );
