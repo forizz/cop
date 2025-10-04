@@ -9,8 +9,15 @@ export type Category = {
   image: Image;
 };
 
+export type Question = {
+  text: string;
+  answers: string[]; // 4 answers
+  correctAnswer: number; // index of correct answer (0-3)
+};
+
 export type Quiz = {
   id: number;
   title: string;
-  answers: string[];
+  category: string; // category title
+  questions: Question[];
 };
