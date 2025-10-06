@@ -5,7 +5,7 @@ import { AnswersList, QuizProgress } from "~/features/quiz/ui";
 
 const currentQuiz = quizes[0];
 const currentQuestion = currentQuiz.questions[0];
-const TOTAL_TIME = 10;
+const TOTAL_TIME = 60;
 const CIRCUMFERENCE = 2 * Math.PI * 60;
 
 export default function QuizPage() {

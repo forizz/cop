@@ -14,19 +14,19 @@ function ProgressTimer({
 }: Readonly<ProgressTimerProps>) {
   const [timeLeft, setTimeLeft] = useState(totalTime);
 
-  const scheduledComplete = useEffectOnNextRender(() => {
-    onComplete();
-  });
-
   useEffect(() => {
     if (timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
     }
+    
     if (timeLeft <= 0) {
-      scheduledComplete();
+      const completeTimer = setTimeout(() => {
+        onComplete();
+      }, 1000);
+      return () => clearTimeout(completeTimer);
     }
-  }, [timeLeft]);
+  }, [timeLeft, onComplete]);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
@@ -52,7 +52,7 @@ function ProgressTimer({
             cx="64"
             cy="64"
             r="60"
-            className="stroke-primary fill-none stroke-4 transition-all ease-linear"
+            className="stroke-primary fill-none stroke-4 transition-all duration-1000 ease-linear"
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
           />
