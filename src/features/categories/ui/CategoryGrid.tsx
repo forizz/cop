@@ -4,7 +4,7 @@ import { CategoryCard } from "./CategoryCard";
 
 function CategoryGrid({ categories }: { categories: Category[] }) {
   return (
-    <div className="grid w-1/2 grid-cols-2 gap-4">
+    <div className="grid max-w-5xl auto-rows-max grid-cols-2 gap-6">
       {categories.map((category) => (
         <CategoryCard
           key={category.link}
