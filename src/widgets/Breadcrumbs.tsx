@@ -30,7 +30,7 @@ function Breadcrumbs() {
         >
           <Link
             to={crumb.link}
-            className="text-blue-500 hover:underline"
+            className="text-primary hover:underline"
           >
             {crumb.label}
           </Link>

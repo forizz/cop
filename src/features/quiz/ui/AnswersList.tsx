@@ -13,7 +13,7 @@ function AnswersList({ answers }: Readonly<AnswersListProps>) {
         <button
           key={index}
           type="button"
-          className="w-full rounded border border-gray-300 p-4 text-left hover:bg-gray-50"
+          className="bg-accent-background w-full rounded border border-gray-300 p-4 text-left hover:bg-gray-50"
         >
           <span className="mr-2 font-semibold">
             {String.fromCharCode(65 + index)}.

@@ -28,7 +28,7 @@ export default function QuizPage() {
           </div>
           <button
             type="button"
-            className="rounded bg-blue-500 px-6 py-2 text-white"
+            className="bg-primary rounded px-6 py-2 text-white"
           >
             Next Question
           </button>
