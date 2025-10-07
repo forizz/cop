@@ -13,14 +13,14 @@ function LatestGames({ latestGames }: LatestGamesProps) {
   return (
     <div className="rounded-2xl bg-white p-8 shadow-lg">
       <h2 className="text-foreground mb-6 text-2xl font-bold">Recent Games</h2>
-      <div className="space-y-4">
+      <ul className="space-y-4">
         {latestGames.map((game) => (
           <LatestGame
             key={game.id}
             game={game}
           />
         ))}
-      </div>
+      </ul>
       <div className="mt-6 text-center">
         <Link
           to="/"

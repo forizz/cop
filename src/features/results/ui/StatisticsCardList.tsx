@@ -19,7 +19,7 @@ function StatisticsCardList({ globalResults }: StatisticsCardListProps) {
   );
 
   return (
-    <div className="mb-12 grid grid-cols-4 gap-6">
+    <ul className="mb-12 grid grid-cols-4 gap-6">
       <StatisticCard
         title="Total Time Played"
         stat={globalResults.overallTime}
@@ -55,7 +55,7 @@ function StatisticsCardList({ globalResults }: StatisticsCardListProps) {
           <TrendingUp className="h-8 w-8 text-orange-600" />
         </div>
       </StatisticCard>
-    </div>
+    </ul>
   );
 }
 
