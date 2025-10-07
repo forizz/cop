@@ -2,7 +2,7 @@ import React from "react";
 
 interface StatisticCardProps {
   children: React.ReactNode;
-  stat: unknown;
+  stat: string | number;
   title: string;
 }
 
@@ -10,9 +10,7 @@ function StatisticCard({ stat, title, children }: StatisticCardProps) {
   return (
     <div className="rounded-2xl bg-white p-6 text-center shadow-lg">
       {children}
-      <h3 className="text-foreground mb-2 text-2xl font-bold">
-        {String(stat)}
-      </h3>
+      <h3 className="text-foreground mb-2 text-2xl font-bold">{stat}</h3>
       <p className="text-muted-foreground">{title}</p>
     </div>
   );

@@ -1,7 +1,7 @@
-import type { LatestGame } from "~/features/results";
+import type { LatestGameType } from "~/features/results";
 import { quizes } from "~/shared/data";
 
-export const latestGames: LatestGame[] = [
+export const latestGames: LatestGameType[] = [
   {
     id: 1,
     title: quizes[0].title,

@@ -1,6 +1,6 @@
 import React from "react";
-import { StatisticCard } from "~/entities/results/ui/StatisticCard";
-import { globalResults, type GlobalResults } from "~/entities/results";
+import { StatisticCard } from "./StatisticCard";
+import type { GlobalResults } from "~/entities/results";
 import { Clock, Target, TrendingUp, Trophy } from "lucide-react";
 
 interface StatisticsCardListProps {

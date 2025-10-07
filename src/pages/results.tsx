@@ -1,9 +1,12 @@
 import React from "react";
 import { AppLayout } from "~/widgets";
-import { latestGames, LatestGames } from "~/features/results";
+import {
+  DetailedStats,
+  latestGames,
+  LatestGames,
+  StatisticsCardList,
+} from "~/features/results";
 import { globalResults } from "~/entities/results";
-import { DetailedStats } from "~/entities/results/ui/DetailedStats";
-import { StatisticsCardList } from "~/entities/results/ui/StatisticsCardList";
 
 export default function ResultsPage() {
   return (
