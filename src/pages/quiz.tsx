@@ -1,7 +1,8 @@
 import React from "react";
-import { AppLayout, Breadcrumbs, ProgressTimer } from "~/widgets";
-import { quizes } from "~/shared/data";
+
 import { AnswersList, QuizProgress } from "~/features/quiz/ui";
+import { quizes } from "~/shared/data";
+import { AppLayout, Breadcrumbs, ProgressTimer } from "~/widgets";
 
 const currentQuiz = quizes[0];
 const currentQuestion = currentQuiz.questions[0];

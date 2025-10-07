@@ -1,5 +1,7 @@
 import React from "react";
+
 import { Link } from "react-router";
+
 import type { Category } from "~/entities";
 
 function CategoryCard({ category }: { category: Category }) {

@@ -1,6 +1,8 @@
 import React from "react";
-import { quizList } from "~/shared/data";
+
 import { Link } from "react-router";
+
+import { quizList } from "~/shared/data";
 
 function PopularQuiz() {
   return (

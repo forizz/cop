@@ -1,4 +1,5 @@
 import React from "react";
+
 import type { GlobalResults } from "~/entities/results";
 
 interface DetailedStatsProps {

@@ -1,5 +1,6 @@
-import type { Route } from "./+types/quiz";
 import ResultsPage from "~/pages/results";
+
+import type { Route } from "./+types/quiz";
 
 export function meta({}: Route.MetaArgs) {
   return [

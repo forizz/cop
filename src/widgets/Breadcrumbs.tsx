@@ -1,6 +1,8 @@
 import React from "react";
-import { Link } from "react-router";
+
 import { ChevronRight } from "lucide-react";
+import { Link } from "react-router";
+
 import { quizes } from "~/shared/data";
 
 function Breadcrumbs() {

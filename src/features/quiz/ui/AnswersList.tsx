@@ -1,4 +1,5 @@
 import React from "react";
+
 import type { Question } from "~/entities";
 
 type AnswersListProps = {

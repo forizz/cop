@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import { useEffectOnNextRender } from "~/shared/hooks/useEffectOnNextRender";
 
 type ProgressTimerProps = {
@@ -19,7 +20,7 @@ function ProgressTimer({
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
     }
-    
+
     if (timeLeft <= 0) {
       const completeTimer = setTimeout(() => {
         onComplete();

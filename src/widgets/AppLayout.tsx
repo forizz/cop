@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Footer, Header } from "~/widgets";
 
 function AppLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -1,5 +1,7 @@
 import React from "react";
+
 import type { Category } from "~/entities";
+
 import { CategoryCard } from "./CategoryCard";
 
 function CategoryGrid({ categories }: { categories: Category[] }) {

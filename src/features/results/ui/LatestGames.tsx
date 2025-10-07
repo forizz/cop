@@ -1,6 +1,8 @@
 import React from "react";
-import { Link } from "react-router";
+
 import { Play } from "lucide-react";
+import { Link } from "react-router";
+
 import { LatestGame, type LatestGameType } from "~/features/results";
 
 interface LatestGamesProps {

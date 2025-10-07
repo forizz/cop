@@ -1,8 +1,9 @@
 import React from "react";
-import { AppLayout } from "~/widgets";
+
 import { CategoryGrid } from "~/features/categories/ui";
 import { PopularQuiz } from "~/features/quiz/ui";
 import { categories } from "~/shared/data";
+import { AppLayout } from "~/widgets";
 
 export default function HomePage() {
   return (

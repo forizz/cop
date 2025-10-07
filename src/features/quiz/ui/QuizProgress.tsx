@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import type { Question } from "~/entities";
-import { Check, ChevronUp } from "lucide-react";
+
 import clsx from "clsx";
+import { Check, ChevronUp } from "lucide-react";
 import { Link } from "react-router";
+
+import type { Question } from "~/entities";
 import { CheckMark } from "~/widgets";
 
 type QuizProgressProps = {
