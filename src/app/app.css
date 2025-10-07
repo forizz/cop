@@ -7,6 +7,7 @@
 
 :root {
     --foreground: oklch(5% 0 0);
+    --muted-foreground: oklch(30% 0 0);
     --background: oklch(95% 0 0);
     --accent-background: oklch(97% 0 0);
     --muted-background: oklch(91% 0 0);
@@ -14,6 +15,7 @@
 
 @theme inline {
     --color-foreground: var(--foreground);
+    --color-muted-foreground: var(--muted-foreground);
     --color-background: var(--background);
     --color-accent-background: var(--accent-background);
     --color-muted-background: var(--muted-background);
