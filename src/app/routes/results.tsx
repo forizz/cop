@@ -3,8 +3,11 @@ import ResultsPage from "~/pages/results";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Quiz Results - Trivia Quiz" },
+    {
+      name: "description",
+      content: "View your quiz performance and statistics",
+    },
   ];
 }
 
