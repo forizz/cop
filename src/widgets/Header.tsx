@@ -1,15 +1,16 @@
 import React from "react";
-import { Link } from "react-router";
-import { Search } from "lucide-react";
 
-export default function Header() {
+import { Search } from "lucide-react";
+import { Link } from "react-router";
+
+function Header() {
   return (
     <header className="flex items-center justify-between p-4 shadow">
       <Link to="/">
         <img
-          src="public/QuizLogo.png"
+          src="/public/QuizLogo.png"
           alt="logo"
-          className="h-32 w-32"
+          className="h-12"
         />
       </Link>
 
@@ -33,3 +34,5 @@ export default function Header() {
     </header>
   );
 }
+
+export { Header };
