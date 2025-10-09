@@ -7,7 +7,7 @@ import {
   getCurrentQuestion,
   initialQuizState,
   quizReducer,
-} from "../index";
+} from "./quizReducer";
 
 interface UseQuizReturn {
   question: {
@@ -23,6 +23,7 @@ interface UseQuizReturn {
     isCompleted: boolean;
     correctCount: number;
     totalQuestions: number;
+    completedQuestions: number[];
   };
   actions: {
     selectAnswer: (id: number) => void;
@@ -58,11 +59,13 @@ function useQuiz(currentQuiz: Quiz): UseQuizReturn {
       isCompleted: state.isCompleted,
       correctCount: state.correctAnswersCount,
       totalQuestions: currentQuiz.questions.length,
+      completedQuestions: state.completedQuestions,
     }),
     [
       state.isCompleted,
       state.correctAnswersCount,
       currentQuiz.questions.length,
+      state.completedQuestions,
     ],
   );
 
@@ -78,8 +81,19 @@ function useQuiz(currentQuiz: Quiz): UseQuizReturn {
     );
 
     const isCorrect = selectedIndex === currentQuestion.correctAnswer;
-    dispatch({ type: "SUBMIT_ANSWER", isCorrect });
-  }, [currentQuestion, state.selectedAnswerId]);
+    const currentQuestionId =
+      currentQuiz.questions[state.currentQuestionIndex].id;
+    dispatch({
+      type: "SUBMIT_ANSWER",
+      isCorrect,
+      questionId: currentQuestionId,
+    });
+  }, [
+    currentQuestion,
+    state.selectedAnswerId,
+    currentQuiz.questions,
+    state.currentQuestionIndex,
+  ]);
 
   const nextQuestion = useCallback(() => {
     if (state.currentQuestionIndex < currentQuiz.questions.length - 1) {
@@ -87,7 +101,7 @@ function useQuiz(currentQuiz: Quiz): UseQuizReturn {
     } else {
       dispatch({ type: "COMPLETE_QUIZ" });
     }
-  }, [state.currentQuestionIndex, currentQuiz.questions.length]);
+  }, [state.currentQuestionIndex, currentQuiz.questions]);
 
   return {
     question: questionData,

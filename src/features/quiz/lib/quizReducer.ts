@@ -5,12 +5,13 @@ export interface QuizState {
   selectedAnswerId: number;
   isCompleted: boolean;
   correctAnswersCount: number;
+  completedQuestions: number[];
   isSubmitted: boolean;
 }
 
 export type QuizAction =
   | { type: "SELECT_ANSWER"; answerId: number }
-  | { type: "SUBMIT_ANSWER"; isCorrect: boolean }
+  | { type: "SUBMIT_ANSWER"; isCorrect: boolean; questionId: number }
   | { type: "NEXT_QUESTION" }
   | { type: "COMPLETE_QUIZ" };
 
@@ -19,6 +20,7 @@ export const initialQuizState: QuizState = {
   selectedAnswerId: -1,
   isCompleted: false,
   correctAnswersCount: 0,
+  completedQuestions: [],
   isSubmitted: false,
 };
 
@@ -36,6 +38,7 @@ export function quizReducer(state: QuizState, action: QuizAction): QuizState {
         correctAnswersCount: action.isCorrect
           ? state.correctAnswersCount + 1
           : state.correctAnswersCount,
+        completedQuestions: [...state.completedQuestions, action.questionId],
       };
     case "NEXT_QUESTION":
       return {

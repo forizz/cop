@@ -22,6 +22,7 @@ export default function QuizPage() {
       isCompleted,
       correctCount: correctAnswersCount,
       totalQuestions,
+      completedQuestions,
     },
     actions: { selectAnswer, submitAnswer, nextQuestion },
   } = useQuiz(currentQuiz);
@@ -121,7 +122,10 @@ export default function QuizPage() {
             }}
             isActive={!isCompleted}
           />
-          <QuizProgress questions={currentQuiz.questions} />
+          <QuizProgress
+            questions={currentQuiz.questions}
+            completedQuestions={completedQuestions}
+          />
         </div>
       </main>
     </AppLayout>
