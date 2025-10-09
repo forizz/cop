@@ -12,17 +12,18 @@ export default function QuizPage() {
   const [startTime] = useState(() => Date.now());
 
   const {
-    selectedAnswerId,
-    currentQuestion,
-    isCompleted,
-    isSubmitted,
-    correctAnswersCount,
-    questionNumber,
-    currentQuestionIndex,
-    correctAnswerId,
-    selectAnswer,
-    nextQuestion,
-    submitAnswer,
+    question: {
+      data: currentQuestion,
+      number: questionNumber,
+      correctAnswerId,
+    },
+    answer: { selectedId: selectedAnswerId, isSubmitted },
+    progress: {
+      isCompleted,
+      correctCount: correctAnswersCount,
+      totalQuestions,
+    },
+    actions: { selectAnswer, submitAnswer, nextQuestion },
   } = useQuiz(currentQuiz);
 
   const onSubmit = useCallback(() => {
@@ -52,8 +53,8 @@ export default function QuizPage() {
             </div>
             <div className="flex flex-col items-center justify-center rounded-lg bg-gray-50 p-6 shadow-md">
               <p className="mb-2 text-xl font-semibold">
-                Correctly {correctAnswersCount} out of{" "}
-                {currentQuiz.questions.length} questions
+                Correctly {correctAnswersCount} out of {totalQuestions}{" "}
+                questions
               </p>
               <p className="text-lg text-gray-600">
                 Time taken: {formattedTime}
@@ -97,7 +98,7 @@ export default function QuizPage() {
               className="bg-primary rounded px-6 py-2 text-white"
               onClick={nextQuestion}
             >
-              {currentQuestionIndex === currentQuiz.questions.length - 1
+              {questionNumber === totalQuestions
                 ? "Finish Quiz"
                 : "Next Question"}
             </button>
