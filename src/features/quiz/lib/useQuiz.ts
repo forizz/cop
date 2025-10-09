@@ -55,19 +55,11 @@ function useQuiz(currentQuiz: Quiz): UseQuizReturn {
     }
 
     setIsSubmitted(true);
-  }, [
-    setIsSubmitted,
-    setCorrectAnswersCount,
-    selectedAnswerId,
-    currentQuestion,
-  ]);
+  }, [selectedAnswerId, currentQuestion]);
 
-  const selectAnswer = useCallback(
-    (id: number) => {
-      setSelectedAnswerId(id);
-    },
-    [setSelectedAnswerId],
-  );
+  const selectAnswer = useCallback((id: number) => {
+    setSelectedAnswerId(id);
+  }, []);
 
   return {
     selectedAnswerId,
