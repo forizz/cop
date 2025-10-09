@@ -10,7 +10,7 @@ function PopularQuiz() {
       <h2 className="bg-primary text-background rounded-t-xl p-4 text-xl font-semibold">
         Popular Quizes
       </h2>
-      {quizList.map((item, i) => (
+      {quizList.map((item) => (
         <Link
           key={item.link}
           to={item.link}

@@ -1,18 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 const useEffectOnNextRender = (callback: React.EffectCallback) => {
-  const [scheduled, setScheduled] = useState(false);
+  const scheduledRef = useRef(false);
+  const callbackRef = useRef(callback);
+
+  // Update callback ref when callback changes
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
 
   useEffect(() => {
-    if (!scheduled) {
+    if (!scheduledRef.current) {
       return;
     }
 
-    setScheduled(false);
-    callback();
-  }, [scheduled]);
+    scheduledRef.current = false;
+    callbackRef.current();
+  });
 
-  return () => setScheduled(true);
+  return () => {
+    scheduledRef.current = true;
+  };
 };
 
 export { useEffectOnNextRender };

@@ -14,11 +14,9 @@ type QuizProgressProps = {
 function QuizProgress({ questions }: Readonly<QuizProgressProps>) {
   const [open, setOpen] = useState(true);
 
-  const [progress, setProgress] = useState(
-    questions.map((_question, index) => {
-      return index % 2 === 0;
-    }),
-  );
+  const progress = questions.map((_question, index) => {
+    return index % 2 === 0;
+  });
 
   function handleOpen() {
     setOpen((prev) => !prev);
@@ -41,9 +39,9 @@ function QuizProgress({ questions }: Readonly<QuizProgressProps>) {
       </button>
       {open && (
         <ol className="flex flex-col space-y-2 p-2">
-          {questions.map((_question, index) => (
+          {questions.map((question, index) => (
             <li
-              key={index}
+              key={question.id}
               className="flex"
             >
               <Link

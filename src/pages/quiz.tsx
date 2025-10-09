@@ -9,7 +9,7 @@ const TOTAL_TIME = 60;
 const CIRCUMFERENCE = 2 * Math.PI * 60;
 
 export default function QuizPage() {
-  const [startTime] = useState(Date.now());
+  const [startTime] = useState(() => Date.now());
 
   const {
     selectedAnswerId,
@@ -32,6 +32,7 @@ export default function QuizPage() {
   }, [selectedAnswerId, submitAnswer]);
 
   if (isCompleted) {
+    // eslint-disable-next-line react-hooks/purity
     const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
     const minutes = Math.floor(elapsedTime / 60);
     const seconds = elapsedTime % 60;
@@ -81,9 +82,9 @@ export default function QuizPage() {
             </p>
           </div>
           <div className="mb-6">
-            <h2 className="mb-4 text-xl">{currentQuestion!.text}</h2>
+            <h2 className="mb-4 text-xl">{currentQuestion.text}</h2>
             <AnswersList
-              answers={currentQuestion!.answers}
+              answers={currentQuestion.answers}
               selectedAnswerId={selectedAnswerId}
               onSelect={selectAnswer}
               isSubmitted={isSubmitted}
