@@ -14,6 +14,7 @@ export default function QuizPage() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswerId, setSelectedAnswerId] = useState(defaultAnswer);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isQuizCompleted, setIsQuizCompleted] = useState(false);
 
   const currentQuestion = currentQuiz.questions[currentQuestionIndex];
   const questionNumber = currentQuestionIndex + 1;
@@ -32,10 +33,27 @@ export default function QuizPage() {
       setSelectedAnswerId(defaultAnswer);
       setIsSubmitted(false);
     } else {
-      // Quiz completed - navigate to results
-      alert("Quiz completed!");
+      // Quiz completed
+      setIsQuizCompleted(true);
     }
   }, [currentQuestionIndex]);
+
+  if (isQuizCompleted) {
+    return (
+      <AppLayout>
+        <main className="flex flex-1 flex-col items-center justify-center py-12">
+          <div className="text-center">
+            <h1 className="mb-4 text-4xl font-bold text-green-600">
+              Quiz Completed!
+            </h1>
+            <p className="text-lg text-gray-600">
+              Congratulations! You have finished the quiz.
+            </p>
+          </div>
+        </main>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
@@ -84,6 +102,7 @@ export default function QuizPage() {
             onComplete={() => {
               alert("Time Ended");
             }}
+            isActive={!isQuizCompleted}
           />
           <QuizProgress questions={currentQuiz.questions} />
         </div>

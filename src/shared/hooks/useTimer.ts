@@ -7,7 +7,11 @@ interface UseTimerReturn {
   formattedTime: string;
 }
 
-function useTimer(totalTime: number, onComplete: () => void): UseTimerReturn {
+function useTimer(
+  totalTime: number,
+  onComplete: () => void,
+  isActive: boolean = true,
+): UseTimerReturn {
   const [timeLeft, setTimeLeft] = useState(totalTime);
 
   const minutes = Math.floor(timeLeft / 60);
@@ -15,6 +19,8 @@ function useTimer(totalTime: number, onComplete: () => void): UseTimerReturn {
   const formattedTime = `${minutes}:${seconds.toString().padStart(2, "0")}`;
 
   useEffect(() => {
+    if (!isActive) return;
+
     if (timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
@@ -26,7 +32,7 @@ function useTimer(totalTime: number, onComplete: () => void): UseTimerReturn {
       }, 1000);
       return () => clearTimeout(completeTimer);
     }
-  }, [timeLeft, onComplete]);
+  }, [timeLeft, onComplete, isActive]);
 
   return {
     timeLeft,
