@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from "react";
 
 import { AnswersList, QuizProgress, useQuiz } from "~/features/quiz";
-import { quizes } from "~/shared/data";
+import { quizzes } from "~/shared/data";
 import { AppLayout, Breadcrumbs, ProgressTimer } from "~/widgets";
 
-const currentQuiz = quizes[0];
+const currentQuiz = quizzes[0];
 const TOTAL_TIME = 60;
 const CIRCUMFERENCE = 2 * Math.PI * 60;
 

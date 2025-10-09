@@ -3,7 +3,7 @@ import React from "react";
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router";
 
-import { quizes } from "~/shared/data";
+import { quizzes } from "~/shared/data";
 
 function Breadcrumbs() {
   const breadcrumbs = [
@@ -16,8 +16,8 @@ function Breadcrumbs() {
       label: "Categories",
     },
     {
-      link: `/quiz/${quizes[0].id}`,
-      label: quizes[0].title,
+      link: `/quiz/${quizzes[0].id}`,
+      label: quizzes[0].title,
     },
   ];
 

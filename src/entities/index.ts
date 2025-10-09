@@ -25,3 +25,9 @@ export type Quiz = {
   category: string; // category title
   questions: Question[];
 };
+
+export type NavQuizItem = {
+  id: number;
+  title: string;
+  link: string;
+};

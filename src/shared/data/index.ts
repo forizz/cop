@@ -27,7 +27,7 @@ export const categories: Category[] = [
   },
 ];
 
-export const quizes: Quiz[] = [
+export const quizzes: Quiz[] = [
   {
     id: 1,
     title: "F1 Champions",
@@ -190,7 +190,7 @@ export const quizes: Quiz[] = [
   },
 ];
 
-export const quizList = quizes.map((quiz) => ({
+export const quizList = quizzes.map((quiz) => ({
   title: quiz.title,
   link: `/quiz/${quiz.id}`,
 }));
