@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 
-import { AnswersList, QuizProgress } from "~/features/quiz";
+import { AnswersList, QuizProgress, useQuiz } from "~/features/quiz";
 import { quizes } from "~/shared/data";
 import { AppLayout, Breadcrumbs, ProgressTimer } from "~/widgets";
 
@@ -8,46 +8,30 @@ const currentQuiz = quizes[0];
 const TOTAL_TIME = 60;
 const CIRCUMFERENCE = 2 * Math.PI * 60;
 
-const defaultAnswer = -1;
-
 export default function QuizPage() {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswerId, setSelectedAnswerId] = useState(defaultAnswer);
-  const [isQuizCompleted, setIsQuizCompleted] = useState(false);
-  const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [startTime] = useState(Date.now());
 
-  const currentQuestion = currentQuiz.questions[currentQuestionIndex];
-  const questionNumber = currentQuestionIndex + 1;
-  const correctAnswerId =
-    currentQuestion.answers[currentQuestion.correctAnswer].id;
+  const {
+    selectedAnswerId,
+    currentQuestion,
+    isCompleted,
+    isSubmitted,
+    correctAnswersCount,
+    questionNumber,
+    currentQuestionIndex,
+    correctAnswerId,
+    selectAnswer,
+    nextQuestion,
+    submitAnswer,
+  } = useQuiz(currentQuiz);
 
   const onSubmit = useCallback(() => {
     if (selectedAnswerId === -1) return;
 
-    const selectedIndex = currentQuestion!.answers.findIndex(
-      (answer) => answer.id === selectedAnswerId,
-    );
+    submitAnswer();
+  }, [selectedAnswerId, submitAnswer]);
 
-    if (selectedIndex === currentQuestion!.correctAnswer) {
-      setCorrectAnswersCount((prev) => prev + 1);
-    }
-
-    setIsSubmitted(true);
-  }, [selectedAnswerId, currentQuestion]);
-
-  const nextQuestion = useCallback(() => {
-    if (currentQuestionIndex < currentQuiz.questions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
-      setSelectedAnswerId(defaultAnswer);
-      setIsSubmitted(false);
-    } else {
-      setIsQuizCompleted(true);
-    }
-  }, [currentQuestionIndex]);
-
-  if (isQuizCompleted) {
+  if (isCompleted) {
     const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
     const minutes = Math.floor(elapsedTime / 60);
     const seconds = elapsedTime % 60;
@@ -80,6 +64,10 @@ export default function QuizPage() {
     );
   }
 
+  if (!currentQuestion) {
+    return null; // or some loading state
+  }
+
   return (
     <AppLayout>
       <main className="flex flex-1 justify-center py-12">
@@ -97,7 +85,7 @@ export default function QuizPage() {
             <AnswersList
               answers={currentQuestion!.answers}
               selectedAnswerId={selectedAnswerId}
-              onSelect={setSelectedAnswerId}
+              onSelect={selectAnswer}
               isSubmitted={isSubmitted}
               correctAnswerId={correctAnswerId}
             />
@@ -129,7 +117,7 @@ export default function QuizPage() {
             onComplete={() => {
               alert("Time Ended");
             }}
-            isActive={!isQuizCompleted}
+            isActive={!isCompleted}
           />
           <QuizProgress questions={currentQuiz.questions} />
         </div>

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { CategoryGrid } from "~/features/categories/ui";
-import { PopularQuiz } from "~/features/quiz/ui";
+import { PopularQuiz } from "~/features/quiz";
 import { categories } from "~/shared/data";
 import { AppLayout } from "~/widgets";
 
