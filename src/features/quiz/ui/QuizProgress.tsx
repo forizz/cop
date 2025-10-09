@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import clsx from "clsx";
-import { Check, ChevronUp } from "lucide-react";
+import { ChevronUp } from "lucide-react";
 import { Link } from "react-router";
 
 import type { Question } from "~/entities";

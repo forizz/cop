@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 
-import { AnswersList, QuizProgress } from "~/features/quiz/ui";
+import { AnswersList, QuizProgress } from "~/features/quiz";
 import { quizes } from "~/shared/data";
 import { AppLayout, Breadcrumbs, ProgressTimer } from "~/widgets";
 
@@ -13,8 +13,10 @@ const defaultAnswer = -1;
 export default function QuizPage() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswerId, setSelectedAnswerId] = useState(defaultAnswer);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
+  const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [startTime] = useState(Date.now());
 
   const currentQuestion = currentQuiz.questions[currentQuestionIndex];
   const questionNumber = currentQuestionIndex + 1;
@@ -24,8 +26,16 @@ export default function QuizPage() {
   const onSubmit = useCallback(() => {
     if (selectedAnswerId === -1) return;
 
+    const selectedIndex = currentQuestion!.answers.findIndex(
+      (answer) => answer.id === selectedAnswerId,
+    );
+
+    if (selectedIndex === currentQuestion!.correctAnswer) {
+      setCorrectAnswersCount((prev) => prev + 1);
+    }
+
     setIsSubmitted(true);
-  }, [selectedAnswerId]);
+  }, [selectedAnswerId, currentQuestion]);
 
   const nextQuestion = useCallback(() => {
     if (currentQuestionIndex < currentQuiz.questions.length - 1) {
@@ -33,22 +43,37 @@ export default function QuizPage() {
       setSelectedAnswerId(defaultAnswer);
       setIsSubmitted(false);
     } else {
-      // Quiz completed
       setIsQuizCompleted(true);
     }
   }, [currentQuestionIndex]);
 
   if (isQuizCompleted) {
+    const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+    const minutes = Math.floor(elapsedTime / 60);
+    const seconds = elapsedTime % 60;
+    const formattedTime = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+
     return (
       <AppLayout>
         <main className="flex flex-1 flex-col items-center justify-center py-12">
-          <div className="text-center">
-            <h1 className="mb-4 text-4xl font-bold text-green-600">
-              Quiz Completed!
-            </h1>
-            <p className="text-lg text-gray-600">
-              Congratulations! You have finished the quiz.
-            </p>
+          <div className="space-y-8">
+            <div className="text-center">
+              <h1 className="mb-4 text-4xl font-bold text-green-600">
+                Quiz Completed!
+              </h1>
+              <p className="mb-4 text-lg text-gray-600">
+                Congratulations! You have finished the quiz.
+              </p>
+            </div>
+            <div className="flex flex-col items-center justify-center rounded-lg bg-gray-50 p-6 shadow-md">
+              <p className="mb-2 text-xl font-semibold">
+                Correctly {correctAnswersCount} out of{" "}
+                {currentQuiz.questions.length} questions
+              </p>
+              <p className="text-lg text-gray-600">
+                Time taken: {formattedTime}
+              </p>
+            </div>
           </div>
         </main>
       </AppLayout>
@@ -83,7 +108,9 @@ export default function QuizPage() {
               className="bg-primary rounded px-6 py-2 text-white"
               onClick={nextQuestion}
             >
-              Next Question
+              {currentQuestionIndex === currentQuiz.questions.length - 1
+                ? "Finish Quiz"
+                : "Next Question"}
             </button>
           ) : (
             <button
