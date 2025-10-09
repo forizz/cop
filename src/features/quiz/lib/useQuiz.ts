@@ -2,42 +2,28 @@ import { useCallback, useMemo, useReducer } from "react";
 
 import type { Question, Quiz } from "~/entities";
 
-interface QuizState {
-  currentQuestionIndex: number;
-  selectedAnswerId: number;
-  isCompleted: boolean;
-  correctAnswersCount: number;
-  isSubmitted: boolean;
-}
-
-type QuizAction =
-  | { type: "SELECT_ANSWER"; answerId: number }
-  | { type: "SUBMIT_ANSWER"; isCorrect: boolean }
-  | { type: "NEXT_QUESTION" }
-  | { type: "COMPLETE_QUIZ" };
+import {
+  getCorrectAnswerId,
+  getCurrentQuestion,
+  initialQuizState,
+  quizReducer,
+} from "../index";
 
 interface UseQuizReturn {
-  // Current question data
   question: {
     data: Question | undefined;
     number: number;
     correctAnswerId: number | undefined;
   };
-
-  // Answer state
   answer: {
     selectedId: number;
     isSubmitted: boolean;
   };
-
-  // Quiz progress
   progress: {
     isCompleted: boolean;
     correctCount: number;
     totalQuestions: number;
   };
-
-  // Actions
   actions: {
     selectAnswer: (id: number) => void;
     submitAnswer: () => void;
@@ -45,64 +31,16 @@ interface UseQuizReturn {
   };
 }
 
-const defaultAnswer = -1;
-
-function quizReducer(state: QuizState, action: QuizAction): QuizState {
-  switch (action.type) {
-    case "SELECT_ANSWER":
-      return {
-        ...state,
-        selectedAnswerId: action.answerId,
-      };
-
-    case "SUBMIT_ANSWER":
-      return {
-        ...state,
-        isSubmitted: true,
-        correctAnswersCount: action.isCorrect
-          ? state.correctAnswersCount + 1
-          : state.correctAnswersCount,
-      };
-
-    case "NEXT_QUESTION":
-      return {
-        ...state,
-        currentQuestionIndex: state.currentQuestionIndex + 1,
-        selectedAnswerId: defaultAnswer,
-        isSubmitted: false,
-      };
-
-    case "COMPLETE_QUIZ":
-      return {
-        ...state,
-        isCompleted: true,
-      };
-
-    default:
-      return state;
-  }
-}
-
 function useQuiz(currentQuiz: Quiz): UseQuizReturn {
-  const [state, dispatch] = useReducer(quizReducer, {
-    currentQuestionIndex: 0,
-    selectedAnswerId: defaultAnswer,
-    isCompleted: false,
-    correctAnswersCount: 0,
-    isSubmitted: false,
-  });
+  const [state, dispatch] = useReducer(quizReducer, initialQuizState);
 
-  const currentQuestion = state.isCompleted
-    ? undefined
-    : currentQuiz.questions[state.currentQuestionIndex];
+  const currentQuestion = getCurrentQuestion(state, currentQuiz.questions);
 
   const questionData = useMemo(
     () => ({
       data: currentQuestion,
       number: state.currentQuestionIndex + 1,
-      correctAnswerId: currentQuestion
-        ? currentQuestion.answers[currentQuestion.correctAnswer].id
-        : undefined,
+      correctAnswerId: getCorrectAnswerId(currentQuestion),
     }),
     [currentQuestion, state.currentQuestionIndex],
   );
