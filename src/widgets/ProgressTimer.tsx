@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { useEffectOnNextRender } from "~/shared/hooks/useEffectOnNextRender";
+import { useTimer } from "~/shared/hooks/useTimer";
 
 type ProgressTimerProps = {
   circumference: number;
@@ -13,25 +14,7 @@ function ProgressTimer({
   totalTime,
   onComplete,
 }: Readonly<ProgressTimerProps>) {
-  const [timeLeft, setTimeLeft] = useState(totalTime);
-
-  useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-
-    if (timeLeft <= 0) {
-      const completeTimer = setTimeout(() => {
-        onComplete();
-      }, 1000);
-      return () => clearTimeout(completeTimer);
-    }
-  }, [timeLeft, onComplete]);
-
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
-  const formattedTime = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  const { timeLeft, formattedTime } = useTimer(totalTime, onComplete);
 
   const strokeDashoffset =
     circumference - (timeLeft / totalTime) * circumference;
