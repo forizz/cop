@@ -21,8 +21,8 @@ export default function HomePage() {
 
   return (
     <AppLayout>
-      <main className="flex flex-1 flex-col gap-2 px-8 py-2">
-        <div className="flex justify-between p-2">
+      <main className="flex flex-1 flex-col items-center gap-2 px-8 py-2">
+        <div className="flex w-full justify-between p-2 px-10">
           <h1>Quiz Categories</h1>
           <QuizSearch quizzes={navQuizzesList} />
         </div>
