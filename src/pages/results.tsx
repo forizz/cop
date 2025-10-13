@@ -7,6 +7,7 @@ import {
   StatisticsCardList,
   latestGames,
 } from "~/features/results";
+import { GamesResults } from "~/features/results/ui/GamesResults";
 import { AppLayout } from "~/widgets";
 
 export default function ResultsPage() {
@@ -27,8 +28,7 @@ export default function ResultsPage() {
 
           <div className="grid grid-cols-2 gap-8">
             <DetailedStats globalResults={globalResults} />
-
-            <LatestGames latestGames={latestGames} />
+            <GamesResults />
           </div>
         </div>
       </main>
