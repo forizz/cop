@@ -1,12 +1,7 @@
 import React from "react";
 
 import { globalResults } from "~/entities/results";
-import {
-  DetailedStats,
-  LatestGames,
-  StatisticsCardList,
-  latestGames,
-} from "~/features/results";
+import { DetailedStats, StatisticsCardList } from "~/features/results";
 import { GamesResults } from "~/features/results/ui/GamesResults";
 import { AppLayout } from "~/widgets";
 
