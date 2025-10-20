@@ -23,8 +23,12 @@ export type Quiz = {
   id: number;
   title: string;
   category: string; // category title
-  questions: Question[];
+  difficulty: {
+    [key in Difficulty]: Question[];
+  };
 };
+
+export type Difficulty = "easy" | "medium" | "hard";
 
 export type NavQuizItem = {
   id: number;

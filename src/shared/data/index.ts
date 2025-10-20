@@ -32,41 +32,113 @@ export const quizzes: Quiz[] = [
     id: 1,
     title: "F1 Champions",
     category: "Sport",
-    questions: [
-      {
-        id: 1,
-        text: "Who has won the most Formula 1 World Championships?",
-        answers: [
-          { text: "Max Verstappen", id: 1 },
-          { text: "Lewis Hamilton", id: 2 },
-          { text: "Sebastian Vettel", id: 3 },
-          { text: "Ayrton Senna", id: 4 },
-        ],
-        correctAnswer: 1,
-      },
-      {
-        id: 2,
-        text: "Which driver won the 2023 F1 Championship?",
-        answers: [
-          { text: "Max Verstappen", id: 1 },
-          { text: "Lewis Hamilton", id: 2 },
-          { text: "Charles Leclerc", id: 3 },
-          { text: "Sergio Perez", id: 4 },
-        ],
-        correctAnswer: 0,
-      },
-      {
-        id: 3,
-        text: "How many championships did Juan Manuel Fangio win?",
-        answers: [
-          { text: "3", id: 1 },
-          { text: "4", id: 2 },
-          { text: "5", id: 3 },
-          { text: "6", id: 4 },
-        ],
-        correctAnswer: 2,
-      },
-    ],
+    difficulty: {
+      easy: [
+        {
+          id: 1,
+          text: "Who has won the most Formula 1 World Championships?",
+          answers: [
+            { text: "Max Verstappen", id: 1 },
+            { text: "Lewis Hamilton", id: 2 },
+            { text: "Sebastian Vettel", id: 3 },
+            { text: "Ayrton Senna", id: 4 },
+          ],
+          correctAnswer: 1,
+        },
+        {
+          id: 2,
+          text: "Which driver won the 2023 F1 Championship?",
+          answers: [
+            { text: "Max Verstappen", id: 1 },
+            { text: "Lewis Hamilton", id: 2 },
+            { text: "Charles Leclerc", id: 3 },
+            { text: "Sergio Perez", id: 4 },
+          ],
+          correctAnswer: 0,
+        },
+        {
+          id: 3,
+          text: "How many championships did Juan Manuel Fangio win?",
+          answers: [
+            { text: "3", id: 1 },
+            { text: "4", id: 2 },
+            { text: "5", id: 3 },
+            { text: "6", id: 4 },
+          ],
+          correctAnswer: 2,
+        },
+      ],
+      medium: [
+        {
+          id: 1,
+          text: "Aaaaaaaaaaaaaa",
+          answers: [
+            { text: "Max Verstappen", id: 1 },
+            { text: "Lewis Hamilton", id: 2 },
+            { text: "Sebastian Vettel", id: 3 },
+            { text: "Ayrton Senna", id: 4 },
+          ],
+          correctAnswer: 1,
+        },
+        {
+          id: 2,
+          text: "bbbbbbbbbbb?",
+          answers: [
+            { text: "Max Verstappen", id: 1 },
+            { text: "Lewis Hamilton", id: 2 },
+            { text: "Charles Leclerc", id: 3 },
+            { text: "Sergio Perez", id: 4 },
+          ],
+          correctAnswer: 0,
+        },
+        {
+          id: 3,
+          text: "cccccccc",
+          answers: [
+            { text: "3", id: 1 },
+            { text: "4", id: 2 },
+            { text: "5", id: 3 },
+            { text: "6", id: 4 },
+          ],
+          correctAnswer: 2,
+        },
+      ],
+      hard: [
+        {
+          id: 1,
+          text: "dddddddddd",
+          answers: [
+            { text: "Max Verstappen", id: 1 },
+            { text: "Lewis Hamilton", id: 2 },
+            { text: "Sebastian Vettel", id: 3 },
+            { text: "Ayrton Senna", id: 4 },
+          ],
+          correctAnswer: 1,
+        },
+        {
+          id: 2,
+          text: "Which driver won the 2023 F1 Championship?",
+          answers: [
+            { text: "Max Verstappen", id: 1 },
+            { text: "Lewis Hamilton", id: 2 },
+            { text: "Charles Leclerc", id: 3 },
+            { text: "Sergio Perez", id: 4 },
+          ],
+          correctAnswer: 0,
+        },
+        {
+          id: 3,
+          text: "How many championships did Juan Manuel Fangio win?",
+          answers: [
+            { text: "3", id: 1 },
+            { text: "4", id: 2 },
+            { text: "5", id: 3 },
+            { text: "6", id: 4 },
+          ],
+          correctAnswer: 2,
+        },
+      ],
+    },
   },
   {
     id: 2,

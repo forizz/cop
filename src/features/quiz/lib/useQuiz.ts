@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useReducer } from "react";
 
-import type { Question, Quiz } from "~/entities";
+import type { Difficulty, Question, Quiz } from "~/entities";
 
 import {
   getCorrectAnswerId,
@@ -32,10 +32,12 @@ interface UseQuizReturn {
   };
 }
 
-function useQuiz(currentQuiz: Quiz): UseQuizReturn {
+function useQuiz(currentQuiz: Quiz, difficulty: Difficulty): UseQuizReturn {
   const [state, dispatch] = useReducer(quizReducer, initialQuizState);
 
-  const currentQuestion = getCurrentQuestion(state, currentQuiz.questions);
+  const questions = currentQuiz.difficulty[difficulty];
+
+  const currentQuestion = getCurrentQuestion(state, questions);
 
   const questionData = useMemo(
     () => ({
@@ -58,13 +60,13 @@ function useQuiz(currentQuiz: Quiz): UseQuizReturn {
     () => ({
       isCompleted: state.isCompleted,
       correctCount: state.correctAnswersCount,
-      totalQuestions: currentQuiz.questions.length,
+      totalQuestions: questions.length,
       completedQuestions: state.completedQuestions,
     }),
     [
       state.isCompleted,
       state.correctAnswersCount,
-      currentQuiz.questions.length,
+      questions.length,
       state.completedQuestions,
     ],
   );
@@ -81,8 +83,7 @@ function useQuiz(currentQuiz: Quiz): UseQuizReturn {
     );
 
     const isCorrect = selectedIndex === currentQuestion.correctAnswer;
-    const currentQuestionId =
-      currentQuiz.questions[state.currentQuestionIndex].id;
+    const currentQuestionId = questions[state.currentQuestionIndex].id;
     dispatch({
       type: "SUBMIT_ANSWER",
       isCorrect,
@@ -91,17 +92,17 @@ function useQuiz(currentQuiz: Quiz): UseQuizReturn {
   }, [
     currentQuestion,
     state.selectedAnswerId,
-    currentQuiz.questions,
+    questions,
     state.currentQuestionIndex,
   ]);
 
   const nextQuestion = useCallback(() => {
-    if (state.currentQuestionIndex < currentQuiz.questions.length - 1) {
+    if (state.currentQuestionIndex < questions.length - 1) {
       dispatch({ type: "NEXT_QUESTION" });
     } else {
       dispatch({ type: "COMPLETE_QUIZ" });
     }
-  }, [state.currentQuestionIndex, currentQuiz.questions]);
+  }, [state.currentQuestionIndex, questions]);
 
   return {
     question: questionData,

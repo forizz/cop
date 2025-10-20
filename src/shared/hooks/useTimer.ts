@@ -53,6 +53,11 @@ function useTimer(totalTime: number, onComplete: () => void): UseTimerReturn {
     };
   }, [isRunning, onComplete]);
 
+  useEffect(() => {
+    // eslint-disable-next-line
+    setTimeLeft(totalTime);
+  }, [totalTime]);
+
   return {
     timeLeft,
     minutes,

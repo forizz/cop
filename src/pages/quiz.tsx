@@ -1,15 +1,34 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useRef } from "react";
 
-import { AnswersList, QuizProgress, useQuiz } from "~/features/quiz";
+import type { Difficulty } from "~/entities";
+import {
+  AnswersList,
+  GameSettings,
+  type IFormInput,
+  QuizProgress,
+  useQuiz,
+} from "~/features/quiz";
 import { quizzes } from "~/shared/data";
 import { AppLayout, Breadcrumbs, ProgressTimer } from "~/widgets";
+import type { ProgressTimerRef } from "~/widgets/ProgressTimer";
 
 const currentQuiz = quizzes[0];
-const TOTAL_TIME = 60;
 const CIRCUMFERENCE = 2 * Math.PI * 60;
 
 export default function QuizPage() {
   const [startTime] = useState(() => Date.now());
+  const [totalTime, setTotalTime] = useState(0);
+  const [difficulty, setDifficulty] = useState<Difficulty>("easy");
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const timerRef = useRef<ProgressTimerRef>(null);
+
+  const questions = currentQuiz.difficulty[difficulty];
+
+  useEffect(() => {
+    // eslint-disable-next-line
+    setSettingsOpen(true);
+  }, []);
 
   const {
     question: {
@@ -25,13 +44,22 @@ export default function QuizPage() {
       completedQuestions,
     },
     actions: { selectAnswer, submitAnswer, nextQuestion },
-  } = useQuiz(currentQuiz);
+  } = useQuiz(currentQuiz, difficulty);
 
   const onSubmit = useCallback(() => {
     if (selectedAnswerId === -1) return;
 
     submitAnswer();
   }, [selectedAnswerId, submitAnswer]);
+
+  const onSubmitSettings = useCallback((data: IFormInput) => {
+    console.log("Game Settings:", data);
+
+    setTotalTime(Number(data.time));
+    setDifficulty(data.difficulty);
+    timerRef.current?.start();
+    setSettingsOpen(false);
+  }, []);
 
   if (isCompleted) {
     // eslint-disable-next-line react-hooks/purity
@@ -74,13 +102,15 @@ export default function QuizPage() {
   return (
     <AppLayout>
       <main className="flex flex-1 justify-center py-12">
+        {settingsOpen && <GameSettings onSubmit={onSubmitSettings} />}
+
         <div className="p-8">
           <Breadcrumbs />
 
           <h1 className="mb-4 text-3xl font-bold">{currentQuiz.title}</h1>
           <div className="mb-4">
             <p className="text-sm text-gray-600">
-              Question {questionNumber} of {currentQuiz.questions.length}
+              Question {questionNumber} of {questions.length}
             </p>
           </div>
           <div className="mb-6">
@@ -115,15 +145,15 @@ export default function QuizPage() {
         </div>
         <div className="flex flex-col gap-6">
           <ProgressTimer
+            ref={timerRef}
             circumference={CIRCUMFERENCE}
-            totalTime={TOTAL_TIME}
+            totalTime={totalTime}
             onComplete={() => {
               alert("Time Ended");
             }}
-            isActive={!isCompleted}
           />
           <QuizProgress
-            questions={currentQuiz.questions}
+            questions={questions}
             completedQuestions={completedQuestions}
           />
         </div>
