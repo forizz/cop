@@ -35,7 +35,10 @@ interface UseQuizReturn {
 function useQuiz(currentQuiz: Quiz, difficulty: Difficulty): UseQuizReturn {
   const [state, dispatch] = useReducer(quizReducer, initialQuizState);
 
-  const questions = currentQuiz.difficulty[difficulty];
+  const questions = useMemo(
+    () => currentQuiz.difficulty[difficulty] || [],
+    [currentQuiz, difficulty],
+  );
 
   const currentQuestion = getCurrentQuestion(state, questions);
 

@@ -24,7 +24,7 @@ export type Quiz = {
   title: string;
   category: string; // category title
   difficulty: {
-    [key in Difficulty]: Question[];
+    [key in Difficulty]?: Question[];
   };
 };
 

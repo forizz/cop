@@ -60,7 +60,7 @@ export function quizReducer(state: QuizState, action: QuizAction): QuizState {
 // Helper function to get current question
 export function getCurrentQuestion(
   state: QuizState,
-  questions: Quiz["questions"],
+  questions: Question[],
 ): Question | undefined {
   return state.isCompleted ? undefined : questions[state.currentQuestionIndex];
 }
