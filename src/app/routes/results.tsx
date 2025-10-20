@@ -2,7 +2,8 @@ import ResultsPage from "~/pages/results";
 
 import type { Route } from "./+types/quiz";
 
-export function meta({}: Route.MetaArgs) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function meta(_: Route.MetaArgs) {
   return [
     { title: "Quiz Results - Trivia Quiz" },
     {

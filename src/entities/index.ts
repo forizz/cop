@@ -10,9 +10,13 @@ export type Category = {
 };
 
 export type Question = {
+  id: number;
   text: string;
-  answers: string[]; // 4 answers
-  correctAnswer: number; // index of correct answer (0-3)
+  answers: {
+    text: string;
+    id: number;
+  }[]; // 4 answers
+  correctAnswer: number;
 };
 
 export type Quiz = {
@@ -20,4 +24,10 @@ export type Quiz = {
   title: string;
   category: string; // category title
   questions: Question[];
+};
+
+export type NavQuizItem = {
+  id: number;
+  title: string;
+  link: string;
 };

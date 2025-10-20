@@ -2,15 +2,19 @@ import React from "react";
 
 import { Link } from "react-router";
 
-import { quizList } from "~/shared/data";
+import type { NavQuizItem } from "~/entities";
 
-function PopularQuiz() {
+interface PopularQuizProps {
+  quizzes: NavQuizItem[];
+}
+
+function PopularQuiz({ quizzes }: PopularQuizProps) {
   return (
     <div className="border-primary flex flex-col rounded-2xl border border-2 text-center">
       <h2 className="bg-primary text-background rounded-t-xl p-4 text-xl font-semibold">
         Popular Quizes
       </h2>
-      {quizList.map((item, i) => (
+      {quizzes.map((item) => (
         <Link
           key={item.link}
           to={item.link}

@@ -3,19 +3,18 @@ import React from "react";
 import { Play } from "lucide-react";
 import { Link } from "react-router";
 
-import { LatestGame, type LatestGameType } from "~/features/results";
+import { ResultGame, type ResultStatGame } from "~/features/results";
 
 interface LatestGamesProps {
-  latestGames: LatestGameType[];
+  latestGames: ResultStatGame[];
 }
 
 function LatestGames({ latestGames }: LatestGamesProps) {
   return (
-    <div className="rounded-2xl bg-white p-8 shadow-lg">
-      <h2 className="text-foreground mb-6 text-2xl font-bold">Recent Games</h2>
+    <>
       <ul className="space-y-4">
         {latestGames.map((game) => (
-          <LatestGame
+          <ResultGame
             key={game.id}
             game={game}
           />
@@ -30,7 +29,7 @@ function LatestGames({ latestGames }: LatestGamesProps) {
           Play Another Quiz
         </Link>
       </div>
-    </div>
+    </>
   );
 }
 

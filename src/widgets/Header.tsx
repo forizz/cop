@@ -14,17 +14,6 @@ function Header() {
         />
       </Link>
 
-      <form>
-        <div className="relative">
-          <Search className="absolute inset-2 left-2 stroke-zinc-500" />
-          <input
-            type="search"
-            placeholder="Search"
-            className="rounded-2xl border border-zinc-700 px-4 py-2 pl-10"
-          />
-        </div>
-      </form>
-
       <button
         type="button"
         className="border-primary bg-primary rounded-4xl border-2 px-4 py-2"

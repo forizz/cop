@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import clsx from "clsx";
-import { Check, ChevronUp } from "lucide-react";
+import { ChevronUp } from "lucide-react";
 import { Link } from "react-router";
 
 import type { Question } from "~/entities";
@@ -9,20 +9,25 @@ import { CheckMark } from "~/widgets";
 
 type QuizProgressProps = {
   questions: Question[];
+  completedQuestions: number[];
 };
 
-function QuizProgress({ questions }: Readonly<QuizProgressProps>) {
+function QuizProgress({
+  questions,
+  completedQuestions,
+}: Readonly<QuizProgressProps>) {
   const [open, setOpen] = useState(true);
 
-  const [progress, setProgress] = useState(
-    questions.map((_question, index) => {
-      return index % 2 === 0;
-    }),
+  const isCompleted = useCallback(
+    (question: Question) => {
+      return completedQuestions.includes(question.id);
+    },
+    [completedQuestions],
   );
 
-  function handleOpen() {
+  const handleOpen = useCallback(() => {
     setOpen((prev) => !prev);
-  }
+  }, []);
 
   return (
     <section className="bg-accent-background flex h-fit flex-col space-y-2 rounded-md shadow-md">
@@ -41,21 +46,23 @@ function QuizProgress({ questions }: Readonly<QuizProgressProps>) {
       </button>
       {open && (
         <ol className="flex flex-col space-y-2 p-2">
-          {questions.map((_question, index) => (
+          {questions.map((question, index) => (
             <li
-              key={index}
+              key={question.id}
               className="flex"
             >
               <Link
                 to="#"
                 className={clsx(
                   "bg-muted-background flex flex-1 items-center justify-between rounded-md p-2 text-sm",
-                  progress[index] ? "text-primary bg-primary/10" : "opacity-30",
+                  isCompleted(question)
+                    ? "text-primary bg-primary/10"
+                    : "opacity-30",
                 )}
               >
                 <span>Quiz Question {index + 1}</span>
 
-                {progress[index] && <CheckMark />}
+                {isCompleted(question) && <CheckMark />}
               </Link>
             </li>
           ))}

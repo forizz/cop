@@ -1,8 +1,11 @@
-export type LatestGame = {
+export type ResultStatGame = {
   id: number;
   title: string;
   category: string;
-  score: string;
+  score: {
+    result: number;
+    total: number;
+  };
   time: string;
   date: string;
 };
