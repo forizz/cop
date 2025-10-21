@@ -11,7 +11,7 @@ interface QuizSearchProps {
 
 function QuizSearch({ quizzes }: QuizSearchProps) {
   const [search, setSearch] = useState("");
-
+  
   const filteredQuizzes = quizzes.filter((quiz) =>
     quiz.title.toLowerCase().includes(search.toLowerCase()),
   );

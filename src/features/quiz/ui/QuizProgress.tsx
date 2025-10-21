@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 
 import clsx from "clsx";
 import { ChevronUp } from "lucide-react";
@@ -72,4 +72,6 @@ function QuizProgress({
   );
 }
 
-export { QuizProgress };
+const QuizProgressMemo = memo(QuizProgress);
+
+export { QuizProgressMemo as QuizProgress };

@@ -1,4 +1,4 @@
-import type { Question, Quiz } from "~/entities";
+import type { Question } from "~/entities";
 
 export interface QuizState {
   currentQuestionIndex: number;

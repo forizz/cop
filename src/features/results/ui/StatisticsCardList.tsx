@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import { Clock, Target, TrendingUp, Trophy } from "lucide-react";
 
@@ -59,4 +59,6 @@ function StatisticsCardList({ globalResults }: StatisticsCardListProps) {
   );
 }
 
-export { StatisticsCardList };
+const StatisticsCardListMemo = memo(StatisticsCardList);
+
+export { StatisticsCardListMemo as StatisticsCardList };

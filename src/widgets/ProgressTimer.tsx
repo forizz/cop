@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle } from "react";
+import React, { useImperativeHandle } from "react";
 
 import { useTimer } from "~/shared/hooks/useTimer";
 

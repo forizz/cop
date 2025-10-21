@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import type { GlobalResults } from "~/entities/results";
 
@@ -48,4 +48,6 @@ function DetailedStats({ globalResults }: DetailedStatsProps) {
   );
 }
 
-export { DetailedStats };
+const DetailedStatsMemo = memo(DetailedStats);
+
+export { DetailedStatsMemo as DetailedStats };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import { type SubmitHandler, useForm } from "react-hook-form";
 
@@ -94,4 +94,6 @@ function GameSettings({ quiz, open, onSubmit, onClose }: GameSettingsProps) {
   );
 }
 
-export { GameSettings };
+const GameSettingsMemo = memo(GameSettings);
+
+export { GameSettingsMemo as GameSettings };

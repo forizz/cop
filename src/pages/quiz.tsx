@@ -18,7 +18,7 @@ const currentQuiz = quizzes[0];
 const CIRCUMFERENCE = 2 * Math.PI * 60;
 
 export default function QuizPage() {
-  const [startTime] = useState(() => Date.now());
+  const [startTime, setStartTime] = useState<number | null>(null);
   const [totalTime, setTotalTime] = useState(0);
   const [difficulty, setDifficulty] = useState<Difficulty>(
     () => (Object.keys(currentQuiz.difficulty)[0] as Difficulty) || "easy",
@@ -68,14 +68,19 @@ export default function QuizPage() {
 
     setTotalTime(Number(data.time));
     setDifficulty(data.difficulty);
+    setStartTime(Date.now()); // Set start time when quiz begins
     timerRef.current?.start();
     setSettingsOpen(false);
   }, []);
 
   const elapsedTime = useMemo(
-    () => Math.floor((Date.now() - startTime) / 1000),
+    () => (startTime ? Math.floor((Date.now() - startTime) / 1000) : 0),
     [startTime],
   );
+
+  const onCloseSettings = useCallback(() => {
+    setSettingsOpen(false);
+  }, []);
 
   return (
     <>
@@ -104,7 +109,7 @@ export default function QuizPage() {
               quiz={currentQuiz}
               open={settingsOpen}
               onSubmit={onSubmitSettings}
-              onClose={() => setSettingsOpen(false)}
+              onClose={onCloseSettings}
             />
 
             <div className="p-8">
