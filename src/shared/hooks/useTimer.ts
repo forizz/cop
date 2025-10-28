@@ -1,44 +1,70 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface UseTimerReturn {
   timeLeft: number;
   minutes: number;
   seconds: number;
   formattedTime: string;
+  start: () => void;
+  stop: () => void;
 }
 
-function useTimer(
-  totalTime: number,
-  onComplete: () => void,
-  isActive: boolean = true,
-): UseTimerReturn {
+function useTimer(totalTime: number, onComplete: () => void): UseTimerReturn {
   const [timeLeft, setTimeLeft] = useState(totalTime);
+  const [isRunning, setIsRunning] = useState(false);
+
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
   const formattedTime = `${minutes}:${seconds.toString().padStart(2, "0")}`;
 
+  const start = useCallback(() => {
+    setIsRunning(true);
+  }, []);
+
+  const stop = useCallback(() => {
+    setIsRunning(false);
+  }, []);
+
   useEffect(() => {
-    if (!isActive) return;
-
-    if (timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-
-    if (timeLeft <= 0) {
-      const completeTimer = setTimeout(() => {
-        onComplete();
+    if (isRunning) {
+      intervalRef.current = setInterval(() => {
+        setTimeLeft((prevTimeLeft) => {
+          if (prevTimeLeft <= 1) {
+            onComplete();
+            setIsRunning(false);
+            return 0;
+          }
+          return prevTimeLeft - 1;
+        });
       }, 1000);
-      return () => clearTimeout(completeTimer);
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     }
-  }, [timeLeft, onComplete, isActive]);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isRunning, onComplete]);
+
+  useEffect(() => {
+    // eslint-disable-next-line
+    setTimeLeft(totalTime);
+  }, [totalTime]);
 
   return {
     timeLeft,
     minutes,
     seconds,
     formattedTime,
+    start,
+    stop,
   };
 }
 

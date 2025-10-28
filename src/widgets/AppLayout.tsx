@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import { Footer, Header } from "~/widgets";
 
@@ -12,4 +12,6 @@ function AppLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   );
 }
 
-export { AppLayout };
+const AppLayoutMemo = memo(AppLayout);
+
+export { AppLayoutMemo as AppLayout };

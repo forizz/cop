@@ -1,15 +1,37 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useMemo, useRef } from "react";
 
-import { AnswersList, QuizProgress, useQuiz } from "~/features/quiz";
+import type { Difficulty } from "~/entities";
+import {
+  AnswersList,
+  GameCompletionModal,
+  GameSettings,
+  type IFormInput,
+  QuizProgress,
+  useQuiz,
+} from "~/features/quiz";
 import { quizzes } from "~/shared/data";
 import { AppLayout, Breadcrumbs, ProgressTimer } from "~/widgets";
+import type { ProgressTimerRef } from "~/widgets/ProgressTimer";
 
 const currentQuiz = quizzes[0];
-const TOTAL_TIME = 60;
 const CIRCUMFERENCE = 2 * Math.PI * 60;
 
 export default function QuizPage() {
-  const [startTime] = useState(() => Date.now());
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [totalTime, setTotalTime] = useState(0);
+  const [difficulty, setDifficulty] = useState<Difficulty>(
+    () => (Object.keys(currentQuiz.difficulty)[0] as Difficulty) || "easy",
+  );
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const timerRef = useRef<ProgressTimerRef>(null);
+
+  const questions = currentQuiz.difficulty[difficulty] || [];
+
+  useEffect(() => {
+    // eslint-disable-next-line
+    setSettingsOpen(true);
+  }, []);
 
   const {
     question: {
@@ -25,7 +47,7 @@ export default function QuizPage() {
       completedQuestions,
     },
     actions: { selectAnswer, submitAnswer, nextQuestion },
-  } = useQuiz(currentQuiz);
+  } = useQuiz(currentQuiz, difficulty);
 
   const onSubmit = useCallback(() => {
     if (selectedAnswerId === -1) return;
@@ -33,101 +55,123 @@ export default function QuizPage() {
     submitAnswer();
   }, [selectedAnswerId, submitAnswer]);
 
-  if (isCompleted) {
-    // eslint-disable-next-line react-hooks/purity
-    const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-    const minutes = Math.floor(elapsedTime / 60);
-    const seconds = elapsedTime % 60;
-    const formattedTime = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  const onSubmitSettings = useCallback((data: IFormInput) => {
+    console.log("Game Settings:", data);
 
-    return (
-      <AppLayout>
-        <main className="flex flex-1 flex-col items-center justify-center py-12">
-          <div className="space-y-8">
-            <div className="text-center">
-              <h1 className="mb-4 text-4xl font-bold text-green-600">
-                Quiz Completed!
-              </h1>
-              <p className="mb-4 text-lg text-gray-600">
-                Congratulations! You have finished the quiz.
-              </p>
-            </div>
-            <div className="flex flex-col items-center justify-center rounded-lg bg-gray-50 p-6 shadow-md">
-              <p className="mb-2 text-xl font-semibold">
-                Correctly {correctAnswersCount} out of {totalQuestions}{" "}
-                questions
-              </p>
-              <p className="text-lg text-gray-600">
-                Time taken: {formattedTime}
-              </p>
-            </div>
-          </div>
-        </main>
-      </AppLayout>
-    );
-  }
+    // Validate that the selected difficulty is available
+    if (!currentQuiz.difficulty[data.difficulty]) {
+      console.error(
+        `Difficulty ${data.difficulty} is not available for this quiz`,
+      );
+      return;
+    }
 
-  if (!currentQuestion) {
-    return null; // or some loading state
-  }
+    setTotalTime(Number(data.time));
+    setDifficulty(data.difficulty);
+    setStartTime(Date.now()); // Set start time when quiz begins
+    timerRef.current?.start();
+    setSettingsOpen(false);
+  }, []);
+
+  const elapsedTime = useMemo(
+    () => (startTime ? Math.floor((Date.now() - startTime) / 1000) : 0),
+    [startTime],
+  );
+
+  const onCloseSettings = useCallback(() => {
+    setSettingsOpen(false);
+  }, []);
 
   return (
-    <AppLayout>
-      <main className="flex flex-1 justify-center py-12">
-        <div className="p-8">
-          <Breadcrumbs />
+    <>
+      <GameCompletionModal
+        open={isCompleted}
+        onClose={() => {
+          // Reset quiz or navigate away
+          window.location.reload();
+        }}
+        score={correctAnswersCount}
+        totalQuestions={totalQuestions}
+        timeSpent={elapsedTime}
+        difficulty={difficulty}
+        onPlayAgain={() => {
+          window.location.reload();
+        }}
+        onNewQuiz={() => {
+          window.location.href = "/";
+        }}
+      />
 
-          <h1 className="mb-4 text-3xl font-bold">{currentQuiz.title}</h1>
-          <div className="mb-4">
-            <p className="text-sm text-gray-600">
-              Question {questionNumber} of {currentQuiz.questions.length}
-            </p>
-          </div>
-          <div className="mb-6">
-            <h2 className="mb-4 text-xl">{currentQuestion.text}</h2>
-            <AnswersList
-              answers={currentQuestion.answers}
-              selectedAnswerId={selectedAnswerId}
-              onSelect={selectAnswer}
-              isSubmitted={isSubmitted}
-              correctAnswerId={correctAnswerId}
+      <AppLayout>
+        {currentQuestion ? (
+          <main className="flex flex-1 justify-center py-12">
+            <GameSettings
+              quiz={currentQuiz}
+              open={settingsOpen}
+              onSubmit={onSubmitSettings}
+              onClose={onCloseSettings}
             />
-          </div>
-          {isSubmitted ? (
-            <button
-              type="button"
-              className="bg-primary rounded px-6 py-2 text-white"
-              onClick={nextQuestion}
-            >
-              {questionNumber === totalQuestions
-                ? "Finish Quiz"
-                : "Next Question"}
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="bg-primary rounded px-6 py-2 text-white"
-              onClick={onSubmit}
-            >
-              Submit
-            </button>
-          )}
-        </div>
-        <div className="flex flex-col gap-6">
-          <ProgressTimer
-            circumference={CIRCUMFERENCE}
-            totalTime={TOTAL_TIME}
-            onComplete={() => {
-              alert("Time Ended");
-            }}
-            isActive={!isCompleted}
-          />
-          <QuizProgress
-            questions={currentQuiz.questions}
-            completedQuestions={completedQuestions}
-          />
-        </div>
-      </main>
-    </AppLayout>
+
+            <div className="p-8">
+              <Breadcrumbs />
+
+              <h1 className="mb-4 text-3xl font-bold">{currentQuiz.title}</h1>
+              <div className="mb-4">
+                <p className="text-sm text-gray-600">
+                  Question {questionNumber} of {questions.length}
+                </p>
+              </div>
+              <div className="mb-6">
+                <h2 className="mb-4 text-xl">{currentQuestion.text}</h2>
+                <AnswersList
+                  answers={currentQuestion.answers}
+                  selectedAnswerId={selectedAnswerId}
+                  onSelect={selectAnswer}
+                  isSubmitted={isSubmitted}
+                  correctAnswerId={correctAnswerId}
+                />
+              </div>
+              {isSubmitted ? (
+                <button
+                  type="button"
+                  className="bg-primary rounded px-6 py-2 text-white"
+                  onClick={nextQuestion}
+                >
+                  {questionNumber === totalQuestions
+                    ? "Finish Quiz"
+                    : "Next Question"}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="bg-primary rounded px-6 py-2 text-white"
+                  onClick={onSubmit}
+                >
+                  Submit
+                </button>
+              )}
+            </div>
+            <div className="flex flex-col gap-6">
+              <ProgressTimer
+                ref={timerRef}
+                circumference={CIRCUMFERENCE}
+                totalTime={totalTime}
+                onComplete={() => {
+                  alert("Time Ended");
+                }}
+              />
+              <QuizProgress
+                questions={questions}
+                completedQuestions={completedQuestions}
+              />
+            </div>
+          </main>
+        ) : (
+          <main className="flex flex-1 justify-center py-12">
+            <p className="text-xl">No questions available</p>
+          </main>
+        )}
+      </AppLayout>
+    </>
   );
 }

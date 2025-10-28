@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useImperativeHandle } from "react";
 
 import { useTimer } from "~/shared/hooks/useTimer";
 
@@ -9,13 +9,23 @@ type ProgressTimerProps = {
   isActive?: boolean;
 };
 
-function ProgressTimer({
+export type ProgressTimerRef = {
+  start: () => void;
+};
+
+const ProgressTimer = ({
+  ref,
   circumference,
   totalTime,
   onComplete,
-  isActive = true,
-}: Readonly<ProgressTimerProps>) {
-  const { timeLeft, formattedTime } = useTimer(totalTime, onComplete, isActive);
+}: ProgressTimerProps & {
+  ref?: React.RefObject<ProgressTimerRef | null>;
+}) => {
+  const { timeLeft, formattedTime, start } = useTimer(totalTime, onComplete);
+
+  useImperativeHandle(ref, () => ({
+    start,
+  }));
 
   const strokeDashoffset =
     circumference - (timeLeft / totalTime) * circumference;
@@ -49,6 +59,6 @@ function ProgressTimer({
       <span className="text-sm">Time Remaining</span>
     </div>
   );
-}
+};
 
 export { ProgressTimer };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router";
@@ -43,4 +43,6 @@ function Breadcrumbs() {
   );
 }
 
-export { Breadcrumbs };
+const BreadcrumbsMemo = memo(Breadcrumbs);
+
+export { BreadcrumbsMemo as Breadcrumbs };
