@@ -11,7 +11,7 @@ interface QuizSearchProps {
 
 function QuizSearch({ quizzes }: QuizSearchProps) {
   const [search, setSearch] = useState("");
-  
+
   const filteredQuizzes = quizzes.filter((quiz) =>
     quiz.title.toLowerCase().includes(search.toLowerCase()),
   );
@@ -24,7 +24,7 @@ function QuizSearch({ quizzes }: QuizSearchProps) {
         placeholder="Search"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="rounded-2xl border border-zinc-700 px-4 py-2 pl-10"
+        className="rounded-2xl border border-zinc-700 bg-white px-4 py-2 pl-10"
       />
 
       {search !== "" && (
