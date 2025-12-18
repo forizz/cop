@@ -1,34 +1,18 @@
-import React, { useImperativeHandle } from "react";
+import { useMemo } from "react";
 
-import { useTimer } from "~/shared/hooks/useTimer";
+import type { UseTimerReturn } from "~/shared/hooks/useTimer";
 
 type ProgressTimerProps = {
   circumference: number;
-  totalTime: number;
-  onComplete: () => void;
-  isActive?: boolean;
+  timer: UseTimerReturn;
 };
 
-export type ProgressTimerRef = {
-  start: () => void;
-};
+const ProgressTimer = ({ circumference, timer }: ProgressTimerProps) => {
+  const strokeDashoffset = useMemo(() => {
+    if (!timer.timeLeft || !timer.totalTime) return 0;
 
-const ProgressTimer = ({
-  ref,
-  circumference,
-  totalTime,
-  onComplete,
-}: ProgressTimerProps & {
-  ref?: React.RefObject<ProgressTimerRef | null>;
-}) => {
-  const { timeLeft, formattedTime, start } = useTimer(totalTime, onComplete);
-
-  useImperativeHandle(ref, () => ({
-    start,
-  }));
-
-  const strokeDashoffset =
-    circumference - (timeLeft / totalTime) * circumference;
+    return circumference - (timer.timeLeft / timer.totalTime) * circumference;
+  }, [circumference, timer.timeLeft, timer.totalTime]);
 
   return (
     <div className="bg-accent-background flex flex-col items-center justify-center gap-2 rounded-md p-4 shadow-md">
@@ -53,7 +37,7 @@ const ProgressTimer = ({
           />
         </svg>
         <div className="text-primary absolute text-2xl font-bold">
-          {formattedTime}
+          {timer.formattedTime}
         </div>
       </div>
       <span className="text-sm">Time Remaining</span>

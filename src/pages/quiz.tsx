@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useMemo, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import type { Difficulty } from "~/entities";
+import { useNavigate } from "react-router";
+
+import type { Difficulty, Question } from "~/entities";
 import {
   AnswersList,
   GameCompletionModal,
@@ -11,20 +12,17 @@ import {
   useQuiz,
 } from "~/features/quiz";
 import { quizzes } from "~/shared/data";
-import { AppLayout, Breadcrumbs, ProgressTimer } from "~/widgets";
-import type { ProgressTimerRef } from "~/widgets/ProgressTimer";
+import { useTimer } from "~/shared/hooks/useTimer";
+import { Breadcrumbs, ProgressTimer } from "~/widgets";
 
 const currentQuiz = quizzes[0];
 const CIRCUMFERENCE = 2 * Math.PI * 60;
 
 export default function QuizPage() {
-  const [startTime, setStartTime] = useState<number | null>(null);
-  const [totalTime, setTotalTime] = useState(0);
   const [difficulty, setDifficulty] = useState<Difficulty>(
     () => (Object.keys(currentQuiz.difficulty)[0] as Difficulty) || "easy",
   );
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const timerRef = useRef<ProgressTimerRef>(null);
 
   const questions = currentQuiz.difficulty[difficulty] || [];
 
@@ -49,50 +47,56 @@ export default function QuizPage() {
     actions: { selectAnswer, submitAnswer, nextQuestion },
   } = useQuiz(currentQuiz, difficulty);
 
+  const timer = useTimer();
+
+  const navigate = useNavigate();
+
   const onSubmit = useCallback(() => {
     if (selectedAnswerId === -1) return;
 
     submitAnswer();
   }, [selectedAnswerId, submitAnswer]);
 
-  const onSubmitSettings = useCallback((data: IFormInput) => {
-    console.log("Game Settings:", data);
+  const onSubmitSettings = useCallback(
+    (data: IFormInput) => {
+      console.log("Game Settings:", data);
 
-    // Validate that the selected difficulty is available
-    if (!currentQuiz.difficulty[data.difficulty]) {
-      console.error(
-        `Difficulty ${data.difficulty} is not available for this quiz`,
-      );
-      return;
-    }
+      // Validate that the selected difficulty is available
+      if (!currentQuiz.difficulty[data.difficulty]) {
+        console.error(
+          `Difficulty ${data.difficulty} is not available for this quiz`,
+        );
+        return;
+      }
 
-    setTotalTime(Number(data.time));
-    setDifficulty(data.difficulty);
-    setStartTime(Date.now()); // Set start time when quiz begins
-    timerRef.current?.start();
-    setSettingsOpen(false);
-  }, []);
-
-  const elapsedTime = useMemo(
-    () => (startTime ? Math.floor((Date.now() - startTime) / 1000) : 0),
-    [startTime],
+      setDifficulty(data.difficulty);
+      timer.setTime(Number(data.time));
+      timer.start();
+      setSettingsOpen(false);
+    },
+    [timer],
   );
 
   const onCloseSettings = useCallback(() => {
-    setSettingsOpen(false);
-  }, []);
+    navigate("/");
+  }, [navigate]);
+
+  useEffect(() => {
+    if (isCompleted) {
+      timer.stop();
+    }
+  }, [timer, isCompleted]);
 
   return (
     <>
       <GameCompletionModal
         open={isCompleted}
         onClose={() => {
-          // Reset quiz or navigate away
           window.location.reload();
         }}
         score={correctAnswersCount}
         totalQuestions={totalQuestions}
-        timeSpent={elapsedTime}
+        timeSpent={timer.elapsedTime()}
         difficulty={difficulty}
         onPlayAgain={() => {
           window.location.reload();
@@ -102,16 +106,16 @@ export default function QuizPage() {
         }}
       />
 
-      <AppLayout>
-        {currentQuestion ? (
-          <main className="flex flex-1 justify-center py-12">
-            <GameSettings
-              quiz={currentQuiz}
-              open={settingsOpen}
-              onSubmit={onSubmitSettings}
-              onClose={onCloseSettings}
-            />
+      <GameSettings
+        quiz={currentQuiz}
+        open={settingsOpen}
+        onSubmit={onSubmitSettings}
+        onClose={onCloseSettings}
+      />
 
+      <main className="flex flex-1 justify-center py-12">
+        {currentQuestion ? (
+          <>
             <div className="p-8">
               <Breadcrumbs />
 
@@ -153,25 +157,19 @@ export default function QuizPage() {
             </div>
             <div className="flex flex-col gap-6">
               <ProgressTimer
-                ref={timerRef}
                 circumference={CIRCUMFERENCE}
-                totalTime={totalTime}
-                onComplete={() => {
-                  alert("Time Ended");
-                }}
+                timer={timer}
               />
               <QuizProgress
                 questions={questions}
                 completedQuestions={completedQuestions}
               />
             </div>
-          </main>
+          </>
         ) : (
-          <main className="flex flex-1 justify-center py-12">
-            <p className="text-xl">No questions available</p>
-          </main>
+          <p className="text-xl">No questions available</p>
         )}
-      </AppLayout>
+      </main>
     </>
   );
 }

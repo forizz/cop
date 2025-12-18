@@ -14,12 +14,12 @@ function Header() {
         />
       </Link>
 
-      <button
-        type="button"
+      <Link
+        to="/results"
         className="border-primary bg-primary rounded-4xl border-2 px-4 py-2"
       >
-        <span className="text-background">Sign Up</span>
-      </button>
+        <span className="text-background">Results</span>
+      </Link>
     </header>
   );
 }
