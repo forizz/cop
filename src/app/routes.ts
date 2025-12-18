@@ -8,6 +8,7 @@ import {
 export default [
   layout("./layout.tsx", [
     index("routes/home.tsx"),
+    route("categories/:categoryName", "routes/category.tsx"),
     route("quizzes/:id", "routes/quiz.tsx"),
     route("results", "routes/results.tsx"),
   ]),

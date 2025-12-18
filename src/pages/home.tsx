@@ -4,18 +4,12 @@ import type { NavQuizItem } from "~/entities";
 import { CategoryGrid } from "~/features/categories/ui";
 import { PopularQuiz } from "~/features/quiz";
 import { categories, quizzes } from "~/shared/data";
+import { quizToNavQuizItem } from "~/shared/utils";
 import { QuizSearch } from "~/widgets";
 
 export default function HomePage() {
   const navQuizzesList = useMemo<NavQuizItem[]>(
-    () =>
-      quizzes.map((quiz) => {
-        return {
-          id: quiz.id,
-          title: quiz.title,
-          link: `/quizzes/${quiz.id}`,
-        };
-      }),
+    () => quizzes.map(quizToNavQuizItem),
     [],
   );
 

@@ -3,7 +3,7 @@ import type { Category, Quiz } from "~/entities";
 export const categories: Category[] = [
   {
     title: "Geography",
-    link: "#/geography",
+    link: "/categories/geography",
     image: {
       href: "public/geography.jpeg",
       alt: "Geography",
@@ -11,7 +11,7 @@ export const categories: Category[] = [
   },
   {
     title: "History",
-    link: "#/history",
+    link: "/categories/history",
     image: {
       href: "public/history.png",
       alt: "History",
@@ -19,7 +19,7 @@ export const categories: Category[] = [
   },
   {
     title: "Sport",
-    link: "#/sport",
+    link: "/categories/sport",
     image: {
       href: "public/sport.png",
       alt: "Sport",
