@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { useNavigate } from "react-router";
 
-import type { Difficulty } from "~/entities";
+import type { Difficulty, Question } from "~/entities";
 import {
   AnswersList,
   GameCompletionModal,
@@ -13,7 +13,7 @@ import {
 } from "~/features/quiz";
 import { quizzes } from "~/shared/data";
 import { useTimer } from "~/shared/hooks/useTimer";
-import { AppLayout, Breadcrumbs, ProgressTimer } from "~/widgets";
+import { Breadcrumbs, ProgressTimer } from "~/widgets";
 
 const currentQuiz = quizzes[0];
 const CIRCUMFERENCE = 2 * Math.PI * 60;
@@ -47,9 +47,7 @@ export default function QuizPage() {
     actions: { selectAnswer, submitAnswer, nextQuestion },
   } = useQuiz(currentQuiz, difficulty);
 
-  const timer = useTimer({
-    onComplete: () => {},
-  });
+  const timer = useTimer();
 
   const navigate = useNavigate();
 
@@ -108,16 +106,16 @@ export default function QuizPage() {
         }}
       />
 
-      <AppLayout>
-        {currentQuestion ? (
-          <main className="flex flex-1 justify-center py-12">
-            <GameSettings
-              quiz={currentQuiz}
-              open={settingsOpen}
-              onSubmit={onSubmitSettings}
-              onClose={onCloseSettings}
-            />
+      <GameSettings
+        quiz={currentQuiz}
+        open={settingsOpen}
+        onSubmit={onSubmitSettings}
+        onClose={onCloseSettings}
+      />
 
+      <main className="flex flex-1 justify-center py-12">
+        {currentQuestion ? (
+          <>
             <div className="p-8">
               <Breadcrumbs />
 
@@ -167,13 +165,11 @@ export default function QuizPage() {
                 completedQuestions={completedQuestions}
               />
             </div>
-          </main>
+          </>
         ) : (
-          <main className="flex flex-1 justify-center py-12">
-            <p className="text-xl">No questions available</p>
-          </main>
+          <p className="text-xl">No questions available</p>
         )}
-      </AppLayout>
+      </main>
     </>
   );
 }

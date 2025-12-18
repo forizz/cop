@@ -15,7 +15,7 @@ interface UseTimerReturn {
   setTime: (time: number) => void;
 }
 
-function useTimer({ onComplete }: UseTimerProps): UseTimerReturn {
+function useTimer({ onComplete }: UseTimerProps = {}): UseTimerReturn {
   const [totalTime, setTotalTime] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [startTime, setStartTime] = useState<number | null>(null);
