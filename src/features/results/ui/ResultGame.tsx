@@ -1,6 +1,11 @@
 import React from "react";
 
-import type { ResultStatGame } from "../index";
+import {
+  MAX_SCORE,
+  type ResultStatGame,
+  calculateAverageScore,
+} from "~/entities/results";
+import { secondsToTime } from "~/shared/utils";
 
 interface ResultGameProps {
   game: ResultStatGame;
@@ -17,9 +22,12 @@ function ResultGame({ game }: ResultGameProps) {
       </div>
       <div className="text-right">
         <div className="text-foreground text-lg font-bold">
-          {game.score.result}/{game.score.total}
+          {calculateAverageScore(game.score.result, game.score.total)}/
+          {MAX_SCORE}
         </div>
-        <div className="text-muted-foreground text-sm">{game.time}</div>
+        <div className="text-muted-foreground text-sm">
+          {secondsToTime(game.time)}
+        </div>
       </div>
     </li>
   );

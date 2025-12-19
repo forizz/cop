@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useNavigate } from "react-router";
 
-import type { Difficulty, Question } from "~/entities";
+import type { Difficulty } from "~/entities";
+import { useResults } from "~/entities/results";
 import {
   AnswersList,
   GameCompletionModal,
@@ -23,6 +24,7 @@ export default function QuizPage() {
     () => (Object.keys(currentQuiz.difficulty)[0] as Difficulty) || "easy",
   );
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const gameRegistered = useRef(false);
 
   const questions = currentQuiz.difficulty[difficulty] || [];
 
@@ -44,12 +46,31 @@ export default function QuizPage() {
       totalQuestions,
       completedQuestions,
     },
-    actions: { selectAnswer, submitAnswer, nextQuestion },
+    actions: { selectAnswer, submitAnswer, nextQuestion, endQuiz },
   } = useQuiz(currentQuiz, difficulty);
 
-  const timer = useTimer();
+  const { registerGame } = useResults((state) => state.actions);
+  const timer = useTimer({
+    onComplete: endQuiz,
+  });
 
   const navigate = useNavigate();
+
+  const handleFinishQuiz = useCallback(() => {
+    registerGame({
+      id: Date.now(),
+      title: currentQuiz.title,
+      category: currentQuiz.category,
+      time: timer.elapsedTime(),
+      score: { result: correctAnswersCount, total: totalQuestions },
+      date: new Date().toLocaleDateString(),
+      questions: {
+        total: totalQuestions,
+        completed: correctAnswersCount,
+      },
+    });
+    gameRegistered.current = true;
+  }, [registerGame, timer, correctAnswersCount, totalQuestions]);
 
   const onSubmit = useCallback(() => {
     if (selectedAnswerId === -1) return;
@@ -84,8 +105,11 @@ export default function QuizPage() {
   useEffect(() => {
     if (isCompleted) {
       timer.stop();
+
+      if (gameRegistered.current) return;
+      handleFinishQuiz();
     }
-  }, [timer, isCompleted]);
+  }, [timer, isCompleted, handleFinishQuiz]);
 
   return (
     <>
@@ -93,6 +117,7 @@ export default function QuizPage() {
         open={isCompleted}
         onClose={() => {
           window.location.reload();
+          gameRegistered.current = false;
         }}
         score={correctAnswersCount}
         totalQuestions={totalQuestions}

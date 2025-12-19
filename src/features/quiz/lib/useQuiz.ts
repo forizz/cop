@@ -29,6 +29,7 @@ interface UseQuizReturn {
     selectAnswer: (id: number) => void;
     submitAnswer: () => void;
     nextQuestion: () => void;
+    endQuiz: () => void;
   };
 }
 
@@ -107,6 +108,10 @@ function useQuiz(currentQuiz: Quiz, difficulty: Difficulty): UseQuizReturn {
     }
   }, [state.currentQuestionIndex, questions]);
 
+  const endQuiz = useCallback(() => {
+    dispatch({ type: "COMPLETE_QUIZ" });
+  }, []);
+
   return {
     question: questionData,
     answer: answerData,
@@ -115,6 +120,7 @@ function useQuiz(currentQuiz: Quiz, difficulty: Difficulty): UseQuizReturn {
       selectAnswer,
       submitAnswer,
       nextQuestion,
+      endQuiz,
     },
   };
 }

@@ -1,15 +1,14 @@
 import React from "react";
 
-import { ResultGame, type ResultStatGame } from "~/features/results";
+import { useResults } from "~/entities/results";
+import { ResultGame } from "~/features/results";
 
-interface BestGamesProps {
-  bestGames: ResultStatGame[];
-}
+function BestGames() {
+  const getBestGames = useResults((state) => state.actions.getBestGames);
 
-function BestGames({ bestGames }: BestGamesProps) {
   return (
     <ul className="space-y-4">
-      {bestGames.map((game) => (
+      {getBestGames().map((game) => (
         <ResultGame
           key={game.id}
           game={game}

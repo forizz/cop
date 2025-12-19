@@ -38,11 +38,7 @@ function GamesResults() {
           </span>
         </button>
       </div>
-      {resultTab === "latest" ? (
-        <LatestGames latestGames={latestGames} />
-      ) : (
-        <BestGames bestGames={bestGames} />
-      )}
+      {resultTab === "latest" ? <LatestGames /> : <BestGames />}
     </div>
   );
 }
