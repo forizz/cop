@@ -2,16 +2,19 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 
 import { useNavigate } from "react-router";
 
-import { type Quiz, useResults } from "~/entities";
 import {
-  AnswersList,
-  GameCompletionModal,
-  QuizProgress,
+  type Quiz,
   useQuizActions,
   useQuizAnswer,
   useQuizProgress,
   useQuizQuestion,
   useQuizStore,
+  useResults,
+} from "~/entities";
+import {
+  AnswersList,
+  GameCompletionModal,
+  QuizProgress,
 } from "~/features/quiz";
 import { GameSettings, useSettingsStore } from "~/features/settings";
 import type { ISettingsForm } from "~/features/settings/ui/GameSettings";
@@ -52,7 +55,6 @@ export default function QuizPage({ id }: { id: number }) {
     openSettings();
   }, [openSettings]);
 
-  // Initialize the quiz store when settings are available
   useEffect(() => {
     if (settings?.difficulty) {
       initialize(currentQuiz, settings.difficulty);
@@ -106,7 +108,6 @@ export default function QuizPage({ id }: { id: number }) {
         return;
       }
 
-      // Initialize the quiz store with the selected difficulty
       initialize(currentQuiz, data.difficulty);
 
       timer.setTime(Number(data.time));
@@ -128,8 +129,20 @@ export default function QuizPage({ id }: { id: number }) {
     }
   }, [timer, isCompleted, handleFinishQuiz]);
 
-  const questions =
-    currentQuiz.difficulty[settings?.difficulty || "easy"] || [];
+  // Get questions from the store
+  const questions = useQuizStore((state) => state.questions);
+
+  if (!settings) {
+    return (
+      <PageBody>
+        <GameSettings
+          quiz={currentQuiz}
+          onSubmit={onSubmitSettings}
+          onClose={onCloseSettings}
+        />
+      </PageBody>
+    );
+  }
 
   if (isCompleted) {
     return (
@@ -165,12 +178,6 @@ export default function QuizPage({ id }: { id: number }) {
 
   return (
     <>
-      <GameSettings
-        quiz={currentQuiz}
-        onSubmit={onSubmitSettings}
-        onClose={onCloseSettings}
-      />
-
       <PageBody>
         <div className="p-8">
           <Breadcrumbs />

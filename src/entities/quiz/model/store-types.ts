@@ -1,33 +1,34 @@
-import type { Question } from "~/entities";
+import type { Difficulty, Question, Quiz } from "~/entities";
 
-type State = {
-  context: {
-    question: {
-      data: Question | undefined;
-      number: number;
-      correctAnswerId: number | undefined;
-    };
-    answer: {
-      selectedId: number;
-      isSubmitted: boolean;
-    };
-    progress: {
-      isCompleted: boolean;
-      correctCount: number;
-      totalQuestions: number;
-      completedQuestions: number[];
-    };
-  };
-};
+interface State {
+  // Quiz data
+  currentQuiz: Quiz | null;
+  difficulty: Difficulty | null;
+  questions: Question[];
 
-type Actions = {
-  actions: {
-    selectAnswer: (id: number) => void;
-    submitAnswer: () => void;
-    nextQuestion: () => void;
-    endQuiz: () => void;
-  };
-};
+  // Game state
+  currentQuestionIndex: number;
+  selectedAnswerId: number;
+  isCompleted: boolean;
+  correctAnswersCount: number;
+  completedQuestions: number[];
+  isSubmitted: boolean;
+
+  // Computed values
+  currentQuestion: Question | undefined;
+  correctAnswerId: number | undefined;
+  questionNumber: number;
+  totalQuestions: number;
+}
+
+interface Actions {
+  initialize: (quiz: Quiz, difficulty: Difficulty) => void;
+  selectAnswer: (id: number) => void;
+  submitAnswer: () => void;
+  nextQuestion: () => void;
+  endQuiz: () => void;
+  reset: () => void;
+}
 
 type Store = State & Actions;
 
