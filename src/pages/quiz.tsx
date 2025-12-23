@@ -48,7 +48,6 @@ export default function QuizPage({ id }: { id: number }) {
     isCompleted,
     correctCount: correctAnswersCount,
     totalQuestions,
-    completedQuestions,
   } = useQuizProgress();
 
   useEffect(() => {
@@ -223,10 +222,7 @@ export default function QuizPage({ id }: { id: number }) {
             circumference={CIRCUMFERENCE}
             timer={timer}
           />
-          <QuizProgress
-            questions={questions}
-            completedQuestions={completedQuestions}
-          />
+          <QuizProgress />
         </div>
       </PageBody>
     </>

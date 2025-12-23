@@ -4,19 +4,14 @@ import clsx from "clsx";
 import { ChevronUp } from "lucide-react";
 import { Link } from "react-router";
 
-import type { Question } from "~/entities";
+import { type Question, useQuizStore } from "~/entities";
 import { CheckMark } from "~/widgets";
 
-type QuizProgressProps = {
-  questions: Question[];
-  completedQuestions: number[];
-};
-
-function QuizProgress({
-  questions,
-  completedQuestions,
-}: Readonly<QuizProgressProps>) {
+function QuizProgress() {
   const [open, setOpen] = useState(true);
+
+  const questions = useQuizStore((state) => state.questions);
+  const completedQuestions = useQuizStore((state) => state.completedQuestions);
 
   const isCompleted = useCallback(
     (question: Question) => {
