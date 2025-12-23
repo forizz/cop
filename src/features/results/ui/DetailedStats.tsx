@@ -4,13 +4,15 @@ import { useResults } from "~/entities/results";
 import { secondsToTime } from "~/shared/utils";
 
 function DetailedStats() {
-  const perfectGames = useResults((state) => state.perfectGames);
-  const bestTime = useResults((state) => state.bestTime);
-  const gamesWon = useResults((state) => state.gamesWon);
-  const gamesPlayed = useResults((state) => state.gamesPlayed);
-  const averageCorrect = useResults((state) => state.averageCorrect);
-  const totalQuestions = useResults((state) => state.questions.total);
-  const completedQuestions = useResults((state) => state.questions.completed);
+  const perfectGames = useResults((state) => state.context.perfectGames);
+  const bestTime = useResults((state) => state.context.bestTime);
+  const gamesWon = useResults((state) => state.context.gamesWon);
+  const gamesPlayed = useResults((state) => state.context.gamesPlayed);
+  const averageCorrect = useResults((state) => state.context.averageCorrect);
+  const totalQuestions = useResults((state) => state.context.questions.total);
+  const completedQuestions = useResults(
+    (state) => state.context.questions.completed,
+  );
 
   return (
     <div className="rounded-2xl bg-white p-8 shadow-lg">

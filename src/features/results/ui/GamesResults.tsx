@@ -2,8 +2,7 @@ import React, { useState } from "react";
 
 import clsx from "clsx";
 
-import { BestGames, LatestGames, latestGames } from "~/features/results";
-import { bestGames } from "~/features/results/model/results";
+import { BestGames, LatestGames } from "~/features/results";
 
 type GameTab = "best" | "latest";
 

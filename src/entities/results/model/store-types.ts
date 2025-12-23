@@ -1,17 +1,19 @@
 import type { ResultStatGame } from "~/entities/results";
 
 type State = {
-  totalTimePlayed: number;
-  gamesWon: number;
-  accuracy: number;
-  gamesPlayed: number;
-  perfectGames: number;
-  bestTime: number;
-  averageCorrect: number;
-  recentGames: ResultStatGame[];
-  questions: {
-    total: number;
-    completed: number;
+  context: {
+    totalTimePlayed: number;
+    gamesWon: number;
+    accuracy: number;
+    gamesPlayed: number;
+    perfectGames: number;
+    bestTime: number;
+    averageCorrect: number;
+    recentGames: ResultStatGame[];
+    questions: {
+      total: number;
+      completed: number;
+    };
   };
 };
 
@@ -33,4 +35,8 @@ type Actions = {
 
 type Store = State & Actions;
 
-export type { Store, Actions, State };
+export type {
+  Store as ResultsStore,
+  Actions as ResultsActions,
+  State as ResultsState,
+};

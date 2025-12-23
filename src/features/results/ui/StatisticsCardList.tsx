@@ -8,10 +8,10 @@ import { secondsToTime } from "~/shared/utils";
 import { StatisticCard } from "./StatisticCard";
 
 function StatisticsCardList() {
-  const gamesPlayed = useResults((state) => state.gamesPlayed);
-  const timePlayed = useResults((state) => state.totalTimePlayed);
-  const accuracy = useResults((state) => state.accuracy);
-  const gamesWon = useResults((state) => state.gamesWon);
+  const gamesPlayed = useResults((state) => state.context.gamesPlayed);
+  const timePlayed = useResults((state) => state.context.totalTimePlayed);
+  const accuracy = useResults((state) => state.context.accuracy);
+  const gamesWon = useResults((state) => state.context.gamesWon);
 
   return (
     <ul className="mb-12 grid grid-cols-4 gap-6">

@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useNavigate } from "react-router";
 
-import type { Difficulty } from "~/entities";
-import { useResults } from "~/entities/results";
+import { type Difficulty, useQuizStore } from "~/entities";
+import { useResults } from "~/entities";
 import {
   AnswersList,
   GameCompletionModal,
@@ -64,13 +64,14 @@ export default function QuizPage() {
       time: timer.elapsedTime(),
       score: { result: correctAnswersCount, total: totalQuestions },
       date: new Date().toLocaleDateString(),
+      difficulty: difficulty,
       questions: {
         total: totalQuestions,
         completed: correctAnswersCount,
       },
     });
     gameRegistered.current = true;
-  }, [registerGame, timer, correctAnswersCount, totalQuestions]);
+  }, [registerGame, timer, correctAnswersCount, totalQuestions, difficulty]);
 
   const onSubmit = useCallback(() => {
     if (selectedAnswerId === -1) return;
@@ -126,9 +127,7 @@ export default function QuizPage() {
         onPlayAgain={() => {
           window.location.reload();
         }}
-        onNewQuiz={() => {
-          window.location.href = "/";
-        }}
+        onNewQuiz={() => navigate("/")}
       />
 
       <GameSettings

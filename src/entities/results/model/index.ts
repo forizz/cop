@@ -1,3 +1,5 @@
+import type { Difficulty } from "~/entities";
+
 export type GlobalResults = {
   overallTime: string;
   bestTime: string;
@@ -15,6 +17,7 @@ export type ResultStatGame = {
   id: number;
   title: string;
   category: string;
+  difficulty: Difficulty;
   score: {
     result: number;
     total: number;
@@ -22,3 +25,7 @@ export type ResultStatGame = {
   time: number;
   date: string;
 };
+
+export * from "./store";
+export * from "./store-types";
+export * from "./results";
