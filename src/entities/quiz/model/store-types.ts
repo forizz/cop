@@ -1,14 +1,32 @@
-import type { Difficulty } from "~/entities";
+import type { Question } from "~/entities";
 
 type State = {
   context: {
-    difficulty: Difficulty;
-    settingsOpen: boolean;
+    question: {
+      data: Question | undefined;
+      number: number;
+      correctAnswerId: number | undefined;
+    };
+    answer: {
+      selectedId: number;
+      isSubmitted: boolean;
+    };
+    progress: {
+      isCompleted: boolean;
+      correctCount: number;
+      totalQuestions: number;
+      completedQuestions: number[];
+    };
   };
 };
 
 type Actions = {
-  actions: {};
+  actions: {
+    selectAnswer: (id: number) => void;
+    submitAnswer: () => void;
+    nextQuestion: () => void;
+    endQuiz: () => void;
+  };
 };
 
 type Store = State & Actions;

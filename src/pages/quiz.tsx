@@ -7,7 +7,11 @@ import {
   AnswersList,
   GameCompletionModal,
   QuizProgress,
-  useQuiz,
+  useQuizActions,
+  useQuizAnswer,
+  useQuizProgress,
+  useQuizQuestion,
+  useQuizStore,
 } from "~/features/quiz";
 import { GameSettings, useSettingsStore } from "~/features/settings";
 import type { ISettingsForm } from "~/features/settings/ui/GameSettings";
@@ -29,25 +33,31 @@ export default function QuizPage({ id }: { id: number }) {
 
   const { registerGame } = useResults((state) => state.actions);
 
+  const { initialize, selectAnswer, submitAnswer, nextQuestion, endQuiz } =
+    useQuizActions();
+  const {
+    data: currentQuestion,
+    number: questionNumber,
+    correctAnswerId,
+  } = useQuizQuestion();
+  const { selectedId: selectedAnswerId, isSubmitted } = useQuizAnswer();
+  const {
+    isCompleted,
+    correctCount: correctAnswersCount,
+    totalQuestions,
+    completedQuestions,
+  } = useQuizProgress();
+
   useEffect(() => {
     openSettings();
   }, [openSettings]);
 
-  const {
-    question: {
-      data: currentQuestion,
-      number: questionNumber,
-      correctAnswerId,
-    },
-    answer: { selectedId: selectedAnswerId, isSubmitted },
-    progress: {
-      isCompleted,
-      correctCount: correctAnswersCount,
-      totalQuestions,
-      completedQuestions,
-    },
-    actions: { selectAnswer, submitAnswer, nextQuestion, endQuiz },
-  } = useQuiz(currentQuiz, settings?.difficulty || "easy");
+  // Initialize the quiz store when settings are available
+  useEffect(() => {
+    if (settings?.difficulty) {
+      initialize(currentQuiz, settings.difficulty);
+    }
+  }, [initialize, currentQuiz, settings?.difficulty]);
 
   const timer = useTimer({
     onComplete: endQuiz,
@@ -96,10 +106,13 @@ export default function QuizPage({ id }: { id: number }) {
         return;
       }
 
+      // Initialize the quiz store with the selected difficulty
+      initialize(currentQuiz, data.difficulty);
+
       timer.setTime(Number(data.time));
       timer.start();
     },
-    [timer, currentQuiz],
+    [timer, currentQuiz, initialize],
   );
 
   const onCloseSettings = useCallback(() => {
