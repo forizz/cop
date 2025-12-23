@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 import { useNavigate } from "react-router";
 
-import { useResults } from "~/entities";
+import { type Quiz, useResults } from "~/entities";
 import {
   AnswersList,
   GameCompletionModal,
@@ -15,10 +15,13 @@ import { quizzes } from "~/shared/data";
 import { useTimer } from "~/shared/hooks/useTimer";
 import { Breadcrumbs, ProgressTimer } from "~/widgets";
 
-const currentQuiz = quizzes[0];
 const CIRCUMFERENCE = 2 * Math.PI * 60;
 
-export default function QuizPage() {
+export default function QuizPage({ id }: { id: number }) {
+  const currentQuiz = useMemo<Quiz>(
+    () => quizzes.find((q) => q.id === id) || quizzes[0],
+    [id],
+  );
   const gameRegistered = useRef(false);
 
   const settings = useSettingsStore((state) => state.context.settings);
@@ -67,7 +70,14 @@ export default function QuizPage() {
       },
     });
     gameRegistered.current = true;
-  }, [registerGame, timer, correctAnswersCount, totalQuestions, settings]);
+  }, [
+    registerGame,
+    timer,
+    correctAnswersCount,
+    totalQuestions,
+    settings,
+    currentQuiz,
+  ]);
 
   const onSubmit = useCallback(() => {
     if (selectedAnswerId === -1) return;
@@ -89,7 +99,7 @@ export default function QuizPage() {
       timer.setTime(Number(data.time));
       timer.start();
     },
-    [timer],
+    [timer, currentQuiz],
   );
 
   const onCloseSettings = useCallback(() => {

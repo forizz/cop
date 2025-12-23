@@ -10,6 +10,10 @@ export function meta(_: Route.MetaArgs) {
   ];
 }
 
-export default function QuizRoute() {
-  return <QuizPage />;
+export async function loader({ params }: Route.LoaderArgs) {
+  return { id: +params.id };
+}
+
+export default function QuizRoute({ loaderData }: Route.ComponentProps) {
+  return <QuizPage id={loaderData.id} />;
 }
