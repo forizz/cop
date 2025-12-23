@@ -1,37 +1,51 @@
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 import type { Difficulty, Quiz } from "~/entities";
+import { useSettingsStore } from "~/features/settings";
 import { Modal } from "~/widgets";
 
 interface GameSettingsProps {
   quiz: Quiz;
-  open: boolean;
-  onSubmit: SubmitHandler<IFormInput>;
-  onClose: () => void;
+  onSubmit?: SubmitHandler<ISettingsForm>;
+  onClose?: () => void;
 }
 
-export interface IFormInput {
+export interface ISettingsForm {
   time: string;
   difficulty: Difficulty;
 }
 
-function GameSettings({ quiz, open, onSubmit, onClose }: GameSettingsProps) {
-  const { register, handleSubmit } = useForm<IFormInput>();
+function GameSettings({ quiz, onSubmit, onClose }: GameSettingsProps) {
+  const { register, handleSubmit } = useForm<ISettingsForm>();
+
+  const { setSettings, closeSettings } = useSettingsStore(
+    (state) => state.actions,
+  );
+  const isOpen = useSettingsStore((state) => state.context.isOpen);
+
+  const onSubmitSettings = useCallback(
+    (data: ISettingsForm) => {
+      setSettings(data);
+      onSubmit?.(data);
+      closeSettings();
+    },
+    [setSettings, closeSettings, onSubmit],
+  );
 
   const availableDifficulties = Object.keys(quiz.difficulty) as Difficulty[];
 
   return (
     <Modal
-      open={open}
+      open={isOpen}
       closeOnBackdropClick={false}
       onClose={onClose}
     >
       <div className="rounded-lg bg-white p-6 shadow-xl">
         <h2 className="mb-4 text-xl font-semibold">Game Settings</h2>
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmitSettings)}
           className="flex flex-col gap-4"
         >
           <div className="flex items-center justify-between gap-4">

@@ -2,27 +2,22 @@ import React, { memo } from "react";
 
 import { Clock, Target, TrendingUp, Trophy } from "lucide-react";
 
-import type { GlobalResults } from "~/entities/results";
+import { useResults } from "~/entities/results";
+import { secondsToTime } from "~/shared/utils";
 
 import { StatisticCard } from "./StatisticCard";
 
-interface StatisticsCardListProps {
-  globalResults: GlobalResults;
-}
-
-function StatisticsCardList({ globalResults }: StatisticsCardListProps) {
-  const winRate = Math.round(
-    (globalResults.gamesCount.won / globalResults.gamesCount.total) * 100,
-  );
-  const accuracyRate = Math.round(
-    (globalResults.correctAnswers / globalResults.totalQuestions) * 100,
-  );
+function StatisticsCardList() {
+  const gamesPlayed = useResults((state) => state.context.gamesPlayed);
+  const timePlayed = useResults((state) => state.context.totalTimePlayed);
+  const accuracy = useResults((state) => state.context.accuracy);
+  const gamesWon = useResults((state) => state.context.gamesWon);
 
   return (
     <ul className="mb-12 grid grid-cols-4 gap-6">
       <StatisticCard
         title="Total Time Played"
-        stat={globalResults.overallTime}
+        stat={secondsToTime(timePlayed)}
       >
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
           <Clock className="h-8 w-8 text-blue-600" />
@@ -30,8 +25,8 @@ function StatisticsCardList({ globalResults }: StatisticsCardListProps) {
       </StatisticCard>
 
       <StatisticCard
-        stat={`${winRate}%`}
-        title="Win Rate"
+        stat={`${gamesWon}`}
+        title="Wins"
       >
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
           <Trophy className="h-8 w-8 text-green-600" />
@@ -39,7 +34,7 @@ function StatisticsCardList({ globalResults }: StatisticsCardListProps) {
       </StatisticCard>
 
       <StatisticCard
-        stat={`${accuracyRate}%`}
+        stat={`${accuracy === -1 ? "N/A" : `${accuracy.toFixed(2)}%`}`}
         title="Accuracy"
       >
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100">
@@ -48,7 +43,7 @@ function StatisticsCardList({ globalResults }: StatisticsCardListProps) {
       </StatisticCard>
 
       <StatisticCard
-        stat={globalResults.gamesCount.total}
+        stat={gamesPlayed}
         title="Games Played"
       >
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100">

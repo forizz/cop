@@ -3,17 +3,16 @@ import React from "react";
 import { Play } from "lucide-react";
 import { Link } from "react-router";
 
-import { ResultGame, type ResultStatGame } from "~/features/results";
+import { useResults } from "~/entities/results";
+import { ResultGame } from "~/features/results";
 
-interface LatestGamesProps {
-  latestGames: ResultStatGame[];
-}
+function LatestGames() {
+  const getLatestGames = useResults((state) => state.actions.getLatestGames);
 
-function LatestGames({ latestGames }: LatestGamesProps) {
   return (
     <>
       <ul className="space-y-4">
-        {latestGames.map((game) => (
+        {getLatestGames().map((game) => (
           <ResultGame
             key={game.id}
             game={game}
