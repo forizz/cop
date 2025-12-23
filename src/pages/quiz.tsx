@@ -1,17 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { useNavigate } from "react-router";
 
-import { type Difficulty, useQuizStore } from "~/entities";
 import { useResults } from "~/entities";
 import {
   AnswersList,
   GameCompletionModal,
-  GameSettings,
-  type IFormInput,
   QuizProgress,
   useQuiz,
 } from "~/features/quiz";
+import { GameSettings, useSettingsStore } from "~/features/settings";
+import type { ISettingsForm } from "~/features/settings/ui/GameSettings";
 import { quizzes } from "~/shared/data";
 import { useTimer } from "~/shared/hooks/useTimer";
 import { Breadcrumbs, ProgressTimer } from "~/widgets";
@@ -20,18 +19,16 @@ const currentQuiz = quizzes[0];
 const CIRCUMFERENCE = 2 * Math.PI * 60;
 
 export default function QuizPage() {
-  const [difficulty, setDifficulty] = useState<Difficulty>(
-    () => (Object.keys(currentQuiz.difficulty)[0] as Difficulty) || "easy",
-  );
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const gameRegistered = useRef(false);
 
-  const questions = currentQuiz.difficulty[difficulty] || [];
+  const settings = useSettingsStore((state) => state.context.settings);
+  const { openSettings } = useSettingsStore((state) => state.actions);
+
+  const { registerGame } = useResults((state) => state.actions);
 
   useEffect(() => {
-    // eslint-disable-next-line
-    setSettingsOpen(true);
-  }, []);
+    openSettings();
+  }, [openSettings]);
 
   const {
     question: {
@@ -47,9 +44,8 @@ export default function QuizPage() {
       completedQuestions,
     },
     actions: { selectAnswer, submitAnswer, nextQuestion, endQuiz },
-  } = useQuiz(currentQuiz, difficulty);
+  } = useQuiz(currentQuiz, settings?.difficulty || "easy");
 
-  const { registerGame } = useResults((state) => state.actions);
   const timer = useTimer({
     onComplete: endQuiz,
   });
@@ -64,14 +60,14 @@ export default function QuizPage() {
       time: timer.elapsedTime(),
       score: { result: correctAnswersCount, total: totalQuestions },
       date: new Date().toLocaleDateString(),
-      difficulty: difficulty,
+      difficulty: settings?.difficulty || "easy",
       questions: {
         total: totalQuestions,
         completed: correctAnswersCount,
       },
     });
     gameRegistered.current = true;
-  }, [registerGame, timer, correctAnswersCount, totalQuestions, difficulty]);
+  }, [registerGame, timer, correctAnswersCount, totalQuestions, settings]);
 
   const onSubmit = useCallback(() => {
     if (selectedAnswerId === -1) return;
@@ -80,10 +76,9 @@ export default function QuizPage() {
   }, [selectedAnswerId, submitAnswer]);
 
   const onSubmitSettings = useCallback(
-    (data: IFormInput) => {
+    (data: ISettingsForm) => {
       console.log("Game Settings:", data);
 
-      // Validate that the selected difficulty is available
       if (!currentQuiz.difficulty[data.difficulty]) {
         console.error(
           `Difficulty ${data.difficulty} is not available for this quiz`,
@@ -91,10 +86,8 @@ export default function QuizPage() {
         return;
       }
 
-      setDifficulty(data.difficulty);
       timer.setTime(Number(data.time));
       timer.start();
-      setSettingsOpen(false);
     },
     [timer],
   );
@@ -112,6 +105,9 @@ export default function QuizPage() {
     }
   }, [timer, isCompleted, handleFinishQuiz]);
 
+  const questions =
+    currentQuiz.difficulty[settings?.difficulty || "easy"] || [];
+
   return (
     <>
       <GameCompletionModal
@@ -123,7 +119,7 @@ export default function QuizPage() {
         score={correctAnswersCount}
         totalQuestions={totalQuestions}
         timeSpent={timer.elapsedTime()}
-        difficulty={difficulty}
+        difficulty={settings?.difficulty || "easy"}
         onPlayAgain={() => {
           window.location.reload();
         }}
@@ -132,7 +128,6 @@ export default function QuizPage() {
 
       <GameSettings
         quiz={currentQuiz}
-        open={settingsOpen}
         onSubmit={onSubmitSettings}
         onClose={onCloseSettings}
       />
