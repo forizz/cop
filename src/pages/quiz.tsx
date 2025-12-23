@@ -118,87 +118,101 @@ export default function QuizPage({ id }: { id: number }) {
   const questions =
     currentQuiz.difficulty[settings?.difficulty || "easy"] || [];
 
+  if (isCompleted) {
+    return (
+      <PageBody>
+        <GameCompletionModal
+          open={isCompleted}
+          onClose={() => {
+            window.location.reload();
+            gameRegistered.current = false;
+          }}
+          score={correctAnswersCount}
+          totalQuestions={totalQuestions}
+          timeSpent={timer.elapsedTime()}
+          difficulty={settings?.difficulty || "easy"}
+          onPlayAgain={() => {
+            window.location.reload();
+          }}
+          onNewQuiz={() => navigate("/")}
+        />
+
+        <p className="text-center text-xl">Quiz Completed</p>
+      </PageBody>
+    );
+  }
+
+  if (!currentQuestion) {
+    return (
+      <PageBody>
+        <p className="text-xl">No questions available</p>
+      </PageBody>
+    );
+  }
+
   return (
     <>
-      <GameCompletionModal
-        open={isCompleted}
-        onClose={() => {
-          window.location.reload();
-          gameRegistered.current = false;
-        }}
-        score={correctAnswersCount}
-        totalQuestions={totalQuestions}
-        timeSpent={timer.elapsedTime()}
-        difficulty={settings?.difficulty || "easy"}
-        onPlayAgain={() => {
-          window.location.reload();
-        }}
-        onNewQuiz={() => navigate("/")}
-      />
-
       <GameSettings
         quiz={currentQuiz}
         onSubmit={onSubmitSettings}
         onClose={onCloseSettings}
       />
 
-      <main className="flex flex-1 justify-center py-12">
-        {currentQuestion ? (
-          <>
-            <div className="p-8">
-              <Breadcrumbs />
+      <PageBody>
+        <div className="p-8">
+          <Breadcrumbs />
 
-              <h1 className="mb-4 text-3xl font-bold">{currentQuiz.title}</h1>
-              <div className="mb-4">
-                <p className="text-sm text-gray-600">
-                  Question {questionNumber} of {questions.length}
-                </p>
-              </div>
-              <div className="mb-6">
-                <h2 className="mb-4 text-xl">{currentQuestion.text}</h2>
-                <AnswersList
-                  answers={currentQuestion.answers}
-                  selectedAnswerId={selectedAnswerId}
-                  onSelect={selectAnswer}
-                  isSubmitted={isSubmitted}
-                  correctAnswerId={correctAnswerId}
-                />
-              </div>
-              {isSubmitted ? (
-                <button
-                  type="button"
-                  className="bg-primary rounded px-6 py-2 text-white"
-                  onClick={nextQuestion}
-                >
-                  {questionNumber === totalQuestions
-                    ? "Finish Quiz"
-                    : "Next Question"}
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="bg-primary rounded px-6 py-2 text-white"
-                  onClick={onSubmit}
-                >
-                  Submit
-                </button>
-              )}
-            </div>
-            <div className="flex flex-col gap-6">
-              <ProgressTimer
-                circumference={CIRCUMFERENCE}
-                timer={timer}
-              />
-              <QuizProgress
-                questions={questions}
-                completedQuestions={completedQuestions}
-              />
-            </div>
-          </>
-        ) : (
-          <p className="text-xl">No questions available</p>
-        )}
-      </main>
+          <h1 className="mb-4 text-3xl font-bold">{currentQuiz.title}</h1>
+          <div className="mb-4">
+            <p className="text-sm text-gray-600">
+              Question {questionNumber} of {questions.length}
+            </p>
+          </div>
+          <div className="mb-6">
+            <h2 className="mb-4 text-xl">{currentQuestion.text}</h2>
+            <AnswersList
+              answers={currentQuestion.answers}
+              selectedAnswerId={selectedAnswerId}
+              onSelect={selectAnswer}
+              isSubmitted={isSubmitted}
+              correctAnswerId={correctAnswerId}
+            />
+          </div>
+          {isSubmitted ? (
+            <button
+              type="button"
+              className="bg-primary rounded px-6 py-2 text-white"
+              onClick={nextQuestion}
+            >
+              {questionNumber === totalQuestions
+                ? "Finish Quiz"
+                : "Next Question"}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="bg-primary rounded px-6 py-2 text-white"
+              onClick={onSubmit}
+            >
+              Submit
+            </button>
+          )}
+        </div>
+        <div className="flex flex-col gap-6">
+          <ProgressTimer
+            circumference={CIRCUMFERENCE}
+            timer={timer}
+          />
+          <QuizProgress
+            questions={questions}
+            completedQuestions={completedQuestions}
+          />
+        </div>
+      </PageBody>
     </>
   );
+}
+
+function PageBody({ children }: { children: React.ReactNode }) {
+  return <main className="flex flex-1 justify-center py-12">{children}</main>;
 }
