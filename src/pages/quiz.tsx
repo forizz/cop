@@ -17,7 +17,7 @@ import {
   QuizProgress,
 } from "~/features/quiz";
 import { GameSettings, useSettingsStore } from "~/features/settings";
-import type { ISettingsForm } from "~/features/settings/ui/GameSettings";
+import type { SettingsFormData } from "~/features/settings/ui/GameSettings";
 import { quizzes } from "~/shared/data";
 import { useTimer } from "~/shared/hooks/useTimer";
 import { Breadcrumbs, ProgressTimer } from "~/widgets";
@@ -97,7 +97,7 @@ export default function QuizPage({ id }: { id: number }) {
   }, [selectedAnswerId, submitAnswer]);
 
   const onSubmitSettings = useCallback(
-    (data: ISettingsForm) => {
+    (data: SettingsFormData) => {
       console.log("Game Settings:", data);
 
       if (!currentQuiz.difficulty[data.difficulty]) {

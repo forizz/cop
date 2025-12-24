@@ -2,23 +2,32 @@ import React, { memo, useCallback } from "react";
 
 import { type SubmitHandler, useForm } from "react-hook-form";
 
-import type { Difficulty, Quiz } from "~/entities";
+import { type Difficulty, type Quiz } from "~/entities";
 import { useSettingsStore } from "~/features/settings";
 import { Modal } from "~/widgets";
 
 interface GameSettingsProps {
   quiz: Quiz;
-  onSubmit?: SubmitHandler<ISettingsForm>;
+  onSubmit?: SubmitHandler<SettingsFormData>;
   onClose?: () => void;
 }
 
-export interface ISettingsForm {
-  time: string;
+export interface SettingsFormData {
+  time: number;
   difficulty: Difficulty;
 }
 
 function GameSettings({ quiz, onSubmit, onClose }: GameSettingsProps) {
-  const { register, handleSubmit } = useForm<ISettingsForm>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SettingsFormData>({
+    defaultValues: {
+      time: 60,
+      difficulty: "easy",
+    },
+  });
 
   const { setSettings, closeSettings } = useSettingsStore(
     (state) => state.actions,
@@ -26,7 +35,7 @@ function GameSettings({ quiz, onSubmit, onClose }: GameSettingsProps) {
   const isOpen = useSettingsStore((state) => state.context.isOpen);
 
   const onSubmitSettings = useCallback(
-    (data: ISettingsForm) => {
+    (data: SettingsFormData) => {
       setSettings(data);
       onSubmit?.(data);
       closeSettings();
@@ -34,7 +43,10 @@ function GameSettings({ quiz, onSubmit, onClose }: GameSettingsProps) {
     [setSettings, closeSettings, onSubmit],
   );
 
-  const availableDifficulties = Object.keys(quiz.difficulty) as Difficulty[];
+  const availableDifficultiesForQuiz = Object.keys(
+    quiz.difficulty,
+  ) as Difficulty[];
+  const availableTimeOptions = [60, 45, 30];
 
   return (
     <Modal
@@ -60,10 +72,18 @@ function GameSettings({ quiz, onSubmit, onClose }: GameSettingsProps) {
               {...register("time")}
               className="rounded border border-gray-300 px-3 py-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             >
-              <option value="60">60 seconds</option>
-              <option value="45">45 seconds</option>
-              <option value="30">30 seconds</option>
+              {availableTimeOptions.map((option) => (
+                <option
+                  key={option}
+                  value={option}
+                >
+                  {option} seconds
+                </option>
+              ))}
             </select>
+            <span className="text-red-500">
+              {errors.time && errors.time.message}
+            </span>
           </div>
           <div className="flex items-center justify-between gap-4">
             <label
@@ -77,7 +97,7 @@ function GameSettings({ quiz, onSubmit, onClose }: GameSettingsProps) {
               {...register("difficulty")}
               className="rounded border border-gray-300 px-3 py-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             >
-              {availableDifficulties.map((difficulty) => (
+              {availableDifficultiesForQuiz.map((difficulty) => (
                 <option
                   key={difficulty}
                   value={difficulty}
@@ -86,6 +106,9 @@ function GameSettings({ quiz, onSubmit, onClose }: GameSettingsProps) {
                 </option>
               ))}
             </select>
+            <span className="text-red-500">
+              {errors.difficulty && errors.difficulty.message}
+            </span>
           </div>
           <div className="mt-6 flex items-center justify-between gap-4">
             <button

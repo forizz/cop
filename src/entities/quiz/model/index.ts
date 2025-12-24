@@ -17,7 +17,9 @@ export type Quiz = {
   };
 };
 
-export type Difficulty = "easy" | "medium" | "hard";
+export const availableDifficulties = ["easy", "medium", "hard"] as const;
+
+export type Difficulty = (typeof availableDifficulties)[number];
 
 export * from "./store";
 export * from "./store-types";

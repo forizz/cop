@@ -1,15 +1,15 @@
-import type { ISettingsForm } from "~/features/settings";
+import type { SettingsFormData } from "~/features/settings/ui/GameSettings";
 
 type State = {
   context: {
     isOpen: boolean;
-    settings: ISettingsForm | null;
+    settings: SettingsFormData | null;
   };
 };
 
 type Actions = {
   actions: {
-    setSettings: (settings: ISettingsForm) => void;
+    setSettings: (settings: SettingsFormData) => void;
     openSettings: () => void;
     closeSettings: () => void;
   };
