@@ -28,6 +28,7 @@ const useSettingsStore = create<SettingsStore, [["zustand/immer", never]]>(
         set((state) => {
           state.context.isOpen = false;
         }),
+      resetSettings: () => set(defaultInitState),
     },
   })),
 );

@@ -1,20 +1,20 @@
 import React, { memo, useCallback } from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 import { type Difficulty, type Quiz } from "~/entities";
-import { useSettingsStore } from "~/features/settings";
-import { Modal } from "~/widgets";
+import {
+  type SettingsFormSchema,
+  settingsFormSchema,
+  useSettingsStore,
+} from "~/features/settings";
+import { AppForm, AppFormField, Modal } from "~/widgets";
 
 interface GameSettingsProps {
   quiz: Quiz;
-  onSubmit?: SubmitHandler<SettingsFormData>;
+  onSubmit?: SubmitHandler<SettingsFormSchema>;
   onClose?: () => void;
-}
-
-export interface SettingsFormData {
-  time: number;
-  difficulty: Difficulty;
 }
 
 function GameSettings({ quiz, onSubmit, onClose }: GameSettingsProps) {
@@ -22,9 +22,10 @@ function GameSettings({ quiz, onSubmit, onClose }: GameSettingsProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SettingsFormData>({
+  } = useForm<SettingsFormSchema>({
+    resolver: zodResolver(settingsFormSchema),
     defaultValues: {
-      time: 60,
+      time: "60",
       difficulty: "easy",
     },
   });
@@ -35,7 +36,7 @@ function GameSettings({ quiz, onSubmit, onClose }: GameSettingsProps) {
   const isOpen = useSettingsStore((state) => state.context.isOpen);
 
   const onSubmitSettings = useCallback(
-    (data: SettingsFormData) => {
+    (data: SettingsFormSchema) => {
       setSettings(data);
       onSubmit?.(data);
       closeSettings();
@@ -56,76 +57,59 @@ function GameSettings({ quiz, onSubmit, onClose }: GameSettingsProps) {
     >
       <div className="rounded-lg bg-white p-6 shadow-xl">
         <h2 className="mb-4 text-xl font-semibold">Game Settings</h2>
-        <form
+        <AppForm
           onSubmit={handleSubmit(onSubmitSettings)}
-          className="flex flex-col gap-4"
+          onClose={onClose}
         >
-          <div className="flex items-center justify-between gap-4">
-            <label
-              htmlFor="time"
-              className="font-medium"
-            >
-              Time:
-            </label>
-            <select
-              id="time"
-              {...register("time")}
-              className="rounded border border-gray-300 px-3 py-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            >
-              {availableTimeOptions.map((option) => (
-                <option
-                  key={option}
-                  value={option}
-                >
-                  {option} seconds
-                </option>
-              ))}
-            </select>
-            <span className="text-red-500">
-              {errors.time && errors.time.message}
-            </span>
-          </div>
-          <div className="flex items-center justify-between gap-4">
-            <label
-              htmlFor="difficulty"
-              className="font-medium"
-            >
-              Difficulty:
-            </label>
-            <select
-              id="difficulty"
-              {...register("difficulty")}
-              className="rounded border border-gray-300 px-3 py-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            >
-              {availableDifficultiesForQuiz.map((difficulty) => (
-                <option
-                  key={difficulty}
-                  value={difficulty}
-                >
-                  {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
-                </option>
-              ))}
-            </select>
-            <span className="text-red-500">
-              {errors.difficulty && errors.difficulty.message}
-            </span>
-          </div>
-          <div className="mt-6 flex items-center justify-between gap-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded border border-gray-300 px-4 py-2 text-gray-600 hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:outline-none"
-            >
-              Back
-            </button>
-            <button
-              type="submit"
-              className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            >
-              Apply
-            </button>
-          </div>
-        </form>
+          <AppFormField error={errors.time && errors.time.message}>
+            <div className="flex items-center justify-between gap-4">
+              <label
+                htmlFor="time"
+                className="font-medium"
+              >
+                Time:
+              </label>
+              <select
+                id="time"
+                {...register("time")}
+                className="rounded border border-gray-300 px-3 py-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              >
+                {availableTimeOptions.map((option) => (
+                  <option
+                    key={option}
+                    value={option}
+                  >
+                    {option} seconds
+                  </option>
+                ))}
+              </select>
+            </div>
+          </AppFormField>
+          <AppFormField error={errors.difficulty && errors.difficulty.message}>
+            <div className="flex items-center justify-between gap-4">
+              <label
+                htmlFor="difficulty"
+                className="font-medium"
+              >
+                Difficulty:
+              </label>
+              <select
+                id="difficulty"
+                {...register("difficulty")}
+                className="rounded border border-gray-300 px-3 py-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              >
+                {availableDifficultiesForQuiz.map((difficulty) => (
+                  <option
+                    key={difficulty}
+                    value={difficulty}
+                  >
+                    {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </AppFormField>
+        </AppForm>
       </div>
     </Modal>
   );

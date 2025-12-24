@@ -17,7 +17,7 @@ import {
   QuizProgress,
 } from "~/features/quiz";
 import { GameSettings, useSettingsStore } from "~/features/settings";
-import type { SettingsFormData } from "~/features/settings/ui/GameSettings";
+import type { SettingsFormSchema } from "~/features/settings/ui/GameSettings";
 import { quizzes } from "~/shared/data";
 import { useTimer } from "~/shared/hooks/useTimer";
 import { Breadcrumbs, ProgressTimer } from "~/widgets";
@@ -32,7 +32,9 @@ export default function QuizPage({ id }: { id: number }) {
   const gameRegistered = useRef(false);
 
   const settings = useSettingsStore((state) => state.context.settings);
-  const { openSettings } = useSettingsStore((state) => state.actions);
+  const { openSettings, resetSettings } = useSettingsStore(
+    (state) => state.actions,
+  );
 
   const { registerGame } = useResults((state) => state.actions);
 
@@ -52,7 +54,11 @@ export default function QuizPage({ id }: { id: number }) {
 
   useEffect(() => {
     openSettings();
-  }, [openSettings]);
+
+    return () => {
+      resetSettings();
+    };
+  }, [openSettings, resetSettings]);
 
   useEffect(() => {
     if (settings?.difficulty) {
@@ -97,7 +103,7 @@ export default function QuizPage({ id }: { id: number }) {
   }, [selectedAnswerId, submitAnswer]);
 
   const onSubmitSettings = useCallback(
-    (data: SettingsFormData) => {
+    (data: SettingsFormSchema) => {
       console.log("Game Settings:", data);
 
       if (!currentQuiz.difficulty[data.difficulty]) {
